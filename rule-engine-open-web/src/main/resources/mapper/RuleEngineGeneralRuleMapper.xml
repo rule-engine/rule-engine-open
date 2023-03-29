@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ruleengine.web.store.mapper.RuleEngineGeneralRuleMapper">
+
+    <update id="updateRuleById">
+        update rule_engine_general_rule
+        set  abnormal_alarm=#{abnormalAlarm},
+             status=#{status},
+             default_action_type=#{defaultActionType},
+             default_action_value=#{defaultActionValue},
+             default_action_value_type=#{defaultActionValueType},
+             enable_default_action=#{enableDefaultAction},
+             current_version=#{currentVersion}
+         where id=#{id}
+    </update>
+
+</mapper>

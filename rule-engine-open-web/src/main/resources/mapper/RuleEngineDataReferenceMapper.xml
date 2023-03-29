@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ruleengine.web.store.mapper.RuleEngineDataReferenceMapper">
+    <select id="dataReference" resultType="cn.ruleengine.web.store.entity.RuleEngineDataReference">
+        select *
+        from rule_engine_data_reference r
+        where r.deleted = 0
+        <choose>
+            <when test="type == 0">
+               and JSON_CONTAINS(r.reference_data -> '$.inputParameterIds', JSON_ARRAY(#{refDataId}))
+            </when>
+            <when test="type == 1">
+                and JSON_CONTAINS(r.reference_data -> '$.variableIds', JSON_ARRAY(#{refDataId}))
+            </when>
+            <when test="type == 4">
+                and JSON_CONTAINS(r.reference_data -> '$.formulaIds', JSON_ARRAY(#{refDataId}))
+            </when>
+            <when test="type == 10">
+                and JSON_CONTAINS(r.reference_data -> '$.generalRuleIds', JSON_ARRAY(#{refDataId}))
+            </when>
+        </choose>
+    </select>
+</mapper>

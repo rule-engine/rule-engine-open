@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ruleengine.web.store.mapper.RuleEngineConditionGroupConditionMapper">
+
+    <update id="updateConditionOrderGreaterThanPlus">
+        update rule_engine_condition_group_condition set order_no=order_no + 1
+         where condition_group_id=#{toConditionGroupId}
+         and order_no &gt;= #{toOrderNo}
+    </update>
+
+    <update id="updateConditionOrderLessThanMinus">
+        update rule_engine_condition_group_condition set order_no=order_no - 1
+         where condition_group_id=#{toConditionGroupId}
+         and order_no &lt;= #{toOrderNo}
+    </update>
+
+</mapper>

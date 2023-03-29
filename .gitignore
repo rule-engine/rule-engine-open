@@ -1,0 +1,13 @@
+*/logs/*
+logs/*
+
+*/target/
+target
+.idea
+*.iml
+
+*.DS_Store
+
+*/src/main/resources/application-test.yml
+*/src/main/resources/application-local.yml
+*/src/main/resources/test.json

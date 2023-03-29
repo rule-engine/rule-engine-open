@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ruleengine.web.store.mapper.RuleEngineUserWorkspaceMapper">
+    <select id="totalMember" resultType="java.lang.Integer">
+        select count(*)
+        from rule_engine_user_workspace rew,
+             rule_engine_user ru
+                where rew.user_id = ru.id
+        and rew.deleted=0 and ru.deleted=0
+                  and rew.workspace_id = #{workspaceId}
+        <if test="type!=null">
+            and rew.is_administration= #{type}
+        </if>
+        <if test="userName != null and userName != ''">
+            and  ru.username like concat('%', #{userName}, '%')
+        </if>
+    </select>
+
+    <select id="listMember" resultType="cn.ruleengine.web.vo.workspace.member.WorkspaceMember">
+        select ru.id as userId,ru.username,ru.avatar,ru.email
+        from rule_engine_user_workspace rew,
+        rule_engine_user ru
+        where rew.user_id = ru.id
+        and rew.deleted=0 and ru.deleted=0
+        and rew.workspace_id = #{workspaceId}
+        <if test="type!=null">
+            and rew.is_administration= #{type}
+        </if>
+        <if test="userName != null and userName != ''">
+            and ru.username like concat('%', #{userName}, '%')
+        </if>
+        <bind name="offset" value="(page.pageIndex-1)*page.pageSize"></bind>
+        limit #{offset},#{page.pageSize}
+    </select>
+</mapper>

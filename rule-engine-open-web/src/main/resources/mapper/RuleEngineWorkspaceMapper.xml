@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ruleengine.web.store.mapper.RuleEngineWorkspaceMapper">
+
+    <select id="listWorkspaceByUserId" resultType="cn.ruleengine.web.store.entity.RuleEngineWorkspace">
+        select rew.id,rew.code,rew.name,rew.create_time as createTime,rew.description from rule_engine_user_workspace reuw,rule_engine_workspace rew
+        where reuw.user_id=#{userId}
+            and reuw.workspace_id=rew.id
+            and reuw.deleted=0
+            and rew.deleted=0
+    </select>
+
+
+    <sql id="listWorkspaceSelectCondition">
+        <where>
+            reuw.user_id=#{userId}
+            and reuw.workspace_id=rew.id
+            and reuw.deleted=0
+            and rew.deleted=0
+            <choose>
+                <when test="query.code!=null and query.code!='' and query.name!=null and query.name!=''">
+                    and (rew.code like concat('%',#{query.code},'%') or rew.name like concat('%',#{query.name},'%'))
+                </when>
+                <when test="query.code!=null and query.code!=''">
+                    and (rew.code like concat('%',#{query.code},'%'))
+                </when>
+                <when test="query.name!=null and query.name!=''">
+                    and (rew.name like concat('%',#{query.name},'%'))
+                </when>
+            </choose>
+        </where>
+    </sql>
+    <select id="listWorkspace" resultType="cn.ruleengine.web.store.entity.RuleEngineWorkspace">
+        select rew.id,rew.code,rew.name,rew.create_time as createTime,rew.description from rule_engine_user_workspace
+        reuw,rule_engine_workspace rew
+        <include refid="listWorkspaceSelectCondition"/>
+        <bind name="offset" value="(page.pageIndex-1)*page.pageSize"></bind>
+        limit #{offset},#{page.pageSize}
+    </select>
+    <select id="totalWorkspace" resultType="java.lang.Integer">
+        select count(*) from rule_engine_user_workspace reuw,rule_engine_workspace rew
+        <include refid="listWorkspaceSelectCondition"/>
+    </select>
+
+    <select id="getFirstWorkspace" resultType="cn.ruleengine.web.store.entity.RuleEngineWorkspace">
+        select rew.id,rew.code,rew.name,rew.create_time as createTime,rew.description,
+        rew.access_key_id as accessKeyId,rew.access_key_secret as accessKeySecret
+        from rule_engine_workspace rew
+        where rew.deleted=0 order by rew.create_time limit 1
+    </select>
+
+</mapper>
