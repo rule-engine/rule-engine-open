@@ -352,10 +352,7 @@ create table rule_engine_operation_record
     data_type      tinyint      null,
     data_id        int          null
 );
-create index idx_user_id
-    on rule_engine_user (user_id);
-create index idx_workspace_id
-    on rule_engine_user (workspace_id);
+
 
 create table rule_engine_user
 (
@@ -575,12 +572,10 @@ INSERT INTO `rule_engine_role_menu` (`id`, `role_id`, `menu_id`, `create_time`, 
 
 
 
-INSERT INTO rule_engine_v2.rule_engine_user (id, username, password, email, phone, avatar, sex, is_admin, description, create_time, update_time, deleted) VALUES (1, 'admin', '5f329d3ac22671f7b214c461e58c27f3', 'admin5@qq.com', null, 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/.jpg?Expires=33162452746&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=bW7G1yt1t%2BjeP3xRIALJbHY8m5U%3D', '男', 0, '7417171471', '2021-06-23 19:09:59', '2021-12-22 04:38:31', 0);
+INSERT INTO rule_engine_user (id, username, password, email, phone, avatar, sex, is_admin, description, create_time, update_time, deleted) VALUES (1, 'admin', '5f329d3ac22671f7b214c461e58c27f3', 'admin5@qq.com', null, 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/.jpg?Expires=33162452746&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=bW7G1yt1t%2BjeP3xRIALJbHY8m5U%3D', '男', 0, '7417171471', '2021-06-23 19:09:59', '2021-12-22 04:38:31', 0);
 
 
 INSERT INTO `rule_engine_user_role` (`id`, `user_id`, `role_id`, `create_time`, `update_time`, `deleted`) VALUES ('3','1','1','2020-09-25 22:20:31','2020-09-25 22:20:32','0');
-INSERT INTO `rule_engine_user_role` (`id`, `user_id`, `role_id`, `create_time`, `update_time`, `deleted`) VALUES ('4','2','2','2020-09-25 23:05:20','2020-09-25 23:05:21','0');
-INSERT INTO `rule_engine_user_role` (`id`, `user_id`, `role_id`, `create_time`, `update_time`, `deleted`) VALUES ('5','3','2','2020-11-22 00:53:38','2020-11-22 00:53:39','0');
 
 
 INSERT INTO `rule_engine_workspace` (`id`, `code`, `name`, `access_key_id`, `access_key_secret`, `description`, `create_time`, `update_time`, `deleted`) VALUES ('1','default','默认工作空间','root','123456','默认的','2020-11-21 02:41:33','2020-11-21 02:41:34','0');
