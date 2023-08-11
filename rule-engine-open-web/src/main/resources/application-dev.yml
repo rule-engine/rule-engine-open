@@ -74,7 +74,7 @@ spring:
         default-requeue-rejected: false #重试次数超过上面的设置之后是否丢弃（false不丢弃时需要写相应代码将该消息加入死信队列）
   #邮箱
   mail:
-    enable: true
+    enable: false
     host: smtp.qq.com
     username:
     password:

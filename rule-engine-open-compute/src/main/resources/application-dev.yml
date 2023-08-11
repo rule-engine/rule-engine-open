@@ -72,29 +72,6 @@ spring:
           enabled: true #启用重试
           initial-interval: 3000 #重试间隔时间（单位毫秒）
         default-requeue-rejected: false #重试次数超过上面的设置之后是否丢弃（false不丢弃时需要写相应代码将该消息加入死信队列）
-  #邮箱
-  mail:
-    enable: true
-    host: smtp.qq.com
-    username:
-    password:
-    port: 465
-    protocol: smtp
-    properties.mail.smtp.auth: true
-    properties.mail.smtp.ssl.enable: true
-
-  #redis配置
-  redis:
-    database: 2
-    host:
-    password:
-    port: 6000
-    lettuce:
-      pool:
-        max-active: 2000
-        min-idle: 30
-        max-idle: 100
-    timeout: 10000
 
   # 线程池配置
   task:
@@ -139,27 +116,6 @@ mybatis-plus:
 jasypt:
   encryptor:
     password: rule-engine-test-password
-
-#是否需要验证权限
-auth:
-  enable: true
-  jwt:
-    secretKey: ruleengine
-    #token失效时间(毫秒单位)
-    keepTime: -1 #废弃，由redis维护
-  redis.token:
-    keyPrefix: "rule-engine:token:"
-    keepTime: 3600000
-
-#阿里巴巴oss
-aliyun:
-  oss:
-    enable: true
-    endPoint:
-    accessKeyId:
-    accessKeySecret:
-    bucketName:
-    defaultFolder:
 
 swagger:
   basic:
