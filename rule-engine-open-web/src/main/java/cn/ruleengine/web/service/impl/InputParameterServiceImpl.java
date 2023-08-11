@@ -75,8 +75,6 @@ public class InputParameterServiceImpl implements InputParameterService {
         inputParameter.setName(addConditionRequest.getName());
         inputParameter.setCode(addConditionRequest.getCode());
         inputParameter.setWorkspaceId(workspace.getId());
-        inputParameter.setDataId(addConditionRequest.getDataId());
-        inputParameter.setDataType(addConditionRequest.getDataType());
         inputParameter.setDescription(addConditionRequest.getDescription());
         inputParameter.setValueType(addConditionRequest.getValueType());
         return ruleEngineInputParameterManager.save(inputParameter);
@@ -111,12 +109,8 @@ public class InputParameterServiceImpl implements InputParameterService {
         Workspace workspace = Context.getCurrentWorkspace();
         return PageUtils.page(ruleEngineInputParameterManager, page, () -> {
             QueryWrapper<RuleEngineInputParameter> wrapper = new QueryWrapper<>();
-            wrapper.lambda().eq(RuleEngineInputParameter::getWorkspaceId, workspace.getId());
             PageUtils.defaultOrder(orders, wrapper);
-            if (Validator.isNotEmpty(query.getDataId())) {
-                wrapper.lambda().eq(RuleEngineInputParameter::getDataId, query.getDataId());
-            }
-            wrapper.lambda().eq(Validator.isNotEmpty(query.getDataType()), RuleEngineInputParameter::getDataType, query.getDataType());
+            wrapper.lambda().eq(RuleEngineInputParameter::getWorkspaceId, workspace.getId());
             if (CollUtil.isNotEmpty(query.getValueType())) {
                 wrapper.lambda().in(RuleEngineInputParameter::getValueType, query.getValueType());
             }
@@ -193,4 +187,5 @@ public class InputParameterServiceImpl implements InputParameterService {
         // 删除
         return ruleEngineInputParameterManager.removeById(id);
     }
+
 }

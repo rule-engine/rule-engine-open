@@ -52,15 +52,4 @@ public class RuleEngineVariable implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private Integer deleted;
 
-    /**
-     * 0：规则  1：规则集  2：决策表
-     */
-    private Integer dataType;
-
-    /**
-     * 如果data_type=0 则此data_id为规则的id
-     */
-    private Integer dataId;
-
-
 }

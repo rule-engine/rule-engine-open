@@ -92,8 +92,6 @@ public class VariableServiceImpl implements VariableService {
         engineVariable.setValueType(addConditionRequest.getValueType());
         engineVariable.setValue(addConditionRequest.getValue());
         engineVariable.setType(addConditionRequest.getType());
-        engineVariable.setDataId(addConditionRequest.getDataId());
-        engineVariable.setDataType(addConditionRequest.getDataType());
         Workspace workspace = Context.getCurrentWorkspace();
         engineVariable.setWorkspaceId(workspace.getId());
         this.ruleEngineVariableManager.save(engineVariable);
@@ -185,8 +183,6 @@ public class VariableServiceImpl implements VariableService {
         QueryWrapper<RuleEngineVariable> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(RuleEngineVariable::getWorkspaceId, workspace.getId());
         PageUtils.defaultOrder(orders, wrapper);
-        wrapper.lambda().eq(Validator.isNotEmpty(query.getDataType()), RuleEngineVariable::getDataType, query.getDataType());
-        wrapper.lambda().eq(Validator.isNotEmpty(query.getDataId()), RuleEngineVariable::getDataId, query.getDataId());
         if (CollUtil.isNotEmpty(query.getValueType())) {
             wrapper.lambda().in(RuleEngineVariable::getValueType, query.getValueType());
         }
@@ -301,8 +297,6 @@ public class VariableServiceImpl implements VariableService {
             this.validFormulaParam(expressionProcessor.getInputParameterCodes());
         }
         VerifyVariableNameRequest verifyVariableNameRequest = new VerifyVariableNameRequest();
-        verifyVariableNameRequest.setDataId(ruleEngineVariable.getDataId());
-        verifyVariableNameRequest.setDataType(ruleEngineVariable.getDataType());
         verifyVariableNameRequest.setName(updateVariableRequest.getName());
         if (!updateVariableRequest.getName().equals(ruleEngineVariable.getName())) {
             if (this.varNameIsExists(verifyVariableNameRequest)) {
