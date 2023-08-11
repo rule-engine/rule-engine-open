@@ -20,6 +20,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -42,6 +43,7 @@ import java.io.IOException;
  * @date 2021/6/17
  * @since 1.0.0
  */
+@ConditionalOnProperty(prefix = "spring.mail", name = "enable", havingValue = "true")
 @Component
 @Slf4j
 public class EmailClient {

@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
     private RuleEngineUserWorkspaceManager ruleEngineUserWorkspaceManager;
     @Resource
     private RedissonClient redissonClient;
-    @Resource
+    @Autowired(required = false)
     private EmailClient emailClient;
     @Resource
     private AliOSSClient aliOssClient;
