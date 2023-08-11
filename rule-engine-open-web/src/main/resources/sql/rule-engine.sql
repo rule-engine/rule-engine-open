@@ -339,21 +339,45 @@ CREATE TABLE `rule_engine_system_log` (
   KEY `rule_engine_system_log_user_id_index` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3820 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `rule_engine_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(30) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `email` varchar(50) DEFAULT NULL,
-  `phone` bigint(16) DEFAULT NULL,
-  `avatar` varchar(200) DEFAULT NULL COMMENT '头像',
-  `sex` varchar(2) DEFAULT NULL,
-  `create_time` timestamp NULL DEFAULT NULL,
-  `update_time` timestamp NULL DEFAULT NULL,
-  `deleted` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `rule_engine_user_email_index` (`email`),
-  KEY `rule_engine_user_username_index` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='规则引擎用户表';
+create table rule_engine_operation_record
+(
+    id             int auto_increment
+        primary key,
+    user_id        int          not null,
+    username       varchar(50)  null,
+    workspace_id   int          not null,
+    workspace_code varchar(50)  null,
+    description    varchar(500) null,
+    operation_time timestamp    null,
+    data_type      tinyint      null,
+    data_id        int          null
+);
+create index idx_user_id
+    on rule_engine_user (user_id);
+create index idx_workspace_id
+    on rule_engine_user (workspace_id);
+
+create table rule_engine_user
+(
+    id          int auto_increment
+        primary key,
+    username    varchar(30)             not null comment '用户名',
+    password    varchar(50)             not null comment '密码',
+    email       varchar(50)             null comment '邮箱',
+    phone       bigint(16)              null comment '手机号',
+    avatar      varchar(200)            null comment '头像',
+    sex         varchar(2)              null comment '性别',
+    is_admin    tinyint                 null comment '是否为超级管理',
+    description varchar(500) default '' null comment '个人描述',
+    create_time timestamp               null,
+    update_time timestamp               null,
+    deleted     tinyint                 null
+)
+    comment '规则引擎用户表';
+create index rule_engine_user_email_index
+    on rule_engine_user (email);
+create index rule_engine_user_username_index
+    on rule_engine_user (username);
 
 CREATE TABLE `rule_engine_user_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -366,16 +390,24 @@ CREATE TABLE `rule_engine_user_role` (
   KEY `rule_engine_user_role_user_id_index` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `rule_engine_user_workspace` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(30) NOT NULL,
-  `workspace_id` int(11) DEFAULT NULL,
-  `create_time` timestamp NULL DEFAULT NULL,
-  `update_time` timestamp NULL DEFAULT NULL,
-  `deleted` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `rule_engine_user_workspace_user_id_index` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户工作空间';
+create table rule_engine_user_workspace
+(
+    id                int auto_increment
+        primary key,
+    user_id           int(30)   not null,
+    workspace_id      int       null,
+    is_administration tinyint   null comment '1是空间管理员 2是普通用户',
+    create_time       timestamp null,
+    update_time       timestamp null,
+    deleted           tinyint   null
+)
+    comment '工作空间成员表';
+
+create index rule_engine_user_workspace_user_id_index
+    on rule_engine_user_workspace (user_id);
+
+create index rule_engine_user_workspace_user_id_workspace_id_index
+    on rule_engine_user_workspace (user_id, workspace_id);
 
 CREATE TABLE `rule_engine_variable` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -395,20 +427,26 @@ CREATE TABLE `rule_engine_variable` (
   KEY `rule_engine_variable_value_type_index` (`value_type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `rule_engine_workspace` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(20) DEFAULT NULL,
-  `name` varchar(30) NOT NULL,
-  `access_key_id` varchar(100) DEFAULT NULL,
-  `access_key_secret` varchar(100) DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `create_time` timestamp NULL DEFAULT NULL,
-  `update_time` timestamp NULL DEFAULT NULL,
-  `deleted` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `rule_engine_workspace_code_index` (`code`),
-  KEY `rule_engine_workspace_name_index` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='工作空间';
+create table rule_engine_workspace
+(
+    id                int auto_increment
+        primary key,
+    code              varchar(20)  null,
+    name              varchar(30)  not null,
+    access_key_id     varchar(100) null,
+    access_key_secret varchar(100) null,
+    description       varchar(500) null,
+    create_time       timestamp    null,
+    update_time       timestamp    null,
+    deleted           tinyint      null
+)
+    comment '工作空间';
+
+create index rule_engine_workspace_code_index
+    on rule_engine_workspace (code);
+
+create index rule_engine_workspace_name_index
+    on rule_engine_workspace (name);
 
 
 INSERT INTO `rule_engine_function` (`id`, `name`, `description`, `executor`, `return_value_type`, `create_time`, `update_time`, `deleted`) VALUES ('1','是否为邮箱','是否为邮箱函数','isEmailFunction','BOOLEAN','2020-09-11 20:26:14','2020-07-16 13:00:43','0');
@@ -537,17 +575,12 @@ INSERT INTO `rule_engine_role_menu` (`id`, `role_id`, `menu_id`, `create_time`, 
 
 
 
-INSERT INTO `rule_engine_user` (`id`, `username`, `password`, `email`, `phone`, `avatar`, `sex`, `create_time`, `update_time`, `deleted`) VALUES ('2','lq','5f329d3ac22671f7b214c461e58c27f3','23123','1021231','http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/73865651.png?Expires=33148420103&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=pBQA%2B8N7P5s3JUAK0R3UF3th5Pw%3D','女','2020-09-25 23:05:06','2021-02-04 06:28:24','0');
-INSERT INTO `rule_engine_user` (`id`, `username`, `password`, `email`, `phone`, `avatar`, `sex`, `create_time`, `update_time`, `deleted`) VALUES ('3','test','5f329d3ac22671f7b214c461e58c27f3','5f329d3ac22671f7b214c461e58c27f3',null,'/static/avatar.jpg','男','2020-11-22 00:53:08','2020-11-22 00:53:09','0');
+INSERT INTO rule_engine_v2.rule_engine_user (id, username, password, email, phone, avatar, sex, is_admin, description, create_time, update_time, deleted) VALUES (1, 'admin', '5f329d3ac22671f7b214c461e58c27f3', 'admin5@qq.com', null, 'http://oss-boot-test.oss-cn-beijing.aliyuncs.com/ruleengine/.jpg?Expires=33162452746&OSSAccessKeyId=LTAIyEa5SulNXbQa&Signature=bW7G1yt1t%2BjeP3xRIALJbHY8m5U%3D', '男', 0, '7417171471', '2021-06-23 19:09:59', '2021-12-22 04:38:31', 0);
+
 
 INSERT INTO `rule_engine_user_role` (`id`, `user_id`, `role_id`, `create_time`, `update_time`, `deleted`) VALUES ('3','1','1','2020-09-25 22:20:31','2020-09-25 22:20:32','0');
 INSERT INTO `rule_engine_user_role` (`id`, `user_id`, `role_id`, `create_time`, `update_time`, `deleted`) VALUES ('4','2','2','2020-09-25 23:05:20','2020-09-25 23:05:21','0');
 INSERT INTO `rule_engine_user_role` (`id`, `user_id`, `role_id`, `create_time`, `update_time`, `deleted`) VALUES ('5','3','2','2020-11-22 00:53:38','2020-11-22 00:53:39','0');
-
-INSERT INTO `rule_engine_user_workspace` (`id`, `user_id`, `workspace_id`, `create_time`, `update_time`, `deleted`) VALUES ('2','2','2','2020-11-22 03:53:37','2020-11-22 03:53:39','1');
-INSERT INTO `rule_engine_user_workspace` (`id`, `user_id`, `workspace_id`, `create_time`, `update_time`, `deleted`) VALUES ('3','3','2','2020-11-22 14:42:50','2020-11-22 14:42:51','0');
-INSERT INTO `rule_engine_user_workspace` (`id`, `user_id`, `workspace_id`, `create_time`, `update_time`, `deleted`) VALUES ('4','2','1','2020-11-22 14:50:33','2020-11-22 14:50:34','0');
-INSERT INTO `rule_engine_user_workspace` (`id`, `user_id`, `workspace_id`, `create_time`, `update_time`, `deleted`) VALUES ('5','3','1','2020-12-21 17:20:16','2020-12-21 17:20:18','0');
 
 
 INSERT INTO `rule_engine_workspace` (`id`, `code`, `name`, `access_key_id`, `access_key_secret`, `description`, `create_time`, `update_time`, `deleted`) VALUES ('1','default','默认工作空间','root','123456','默认的','2020-11-21 02:41:33','2020-11-21 02:41:34','0');

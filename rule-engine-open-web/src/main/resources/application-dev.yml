@@ -1,0 +1,168 @@
+logging:
+  config: classpath:logback-spring.xml
+  level.root: info
+  file:
+    path: logs/web
+
+server:
+  port: 8010
+  undertow:
+    # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+    # 不要设置过大，如果过大，启动项目会报错：打开文件数过多
+    io-threads: 4
+    # 阻塞任务线程池, 当执行类似servlet请求阻塞IO操作, undertow会从这个线程池中取得线程
+    # 它的值设置取决于系统线程执行任务的阻塞系数，默认值是IO线程数*8
+    worker-threads: 32
+    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+    # 每块buffer的空间大小,越小的空间被利用越充分，不要设置太大，以免影响其他应用，合适即可
+    buffer-size: 1024
+    # 是否分配的直接内存(NIO直接分配的堆外内存)
+    direct-buffers: true
+
+spring:
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      name: master
+      url:
+      username:
+      password:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 初始化大小，最小，最大
+      initialSize: 10
+      minIdle: 300
+      maxActive: 2000
+      # 配置获取连接等待超时的时间
+      maxWait: 10000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 30000
+      validationQuery: select 1 from dual #检验连接是否有效的查询语句
+      testWhileIdle: true #设置从连接池获取连接时是否检查连接有效性，true时，如果连接空闲时间超过minEvictableIdleTimeMillis进行检查，否则不检查;false时，不检查
+      testOnBorrow: false
+      testOnReturn: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # 合并多个DruidDataSource的监控数据
+      useGlobalDataSourceStat: true
+      # druid监控账号密码
+      stat-view-servlet:
+        login-username: dqw
+        login-password: 123123
+      aop-patterns: cn.ruleengine.*.service.*
+  #消息队列配置
+  rabbitmq:
+    host:
+    port: 5672
+    username:
+    password:
+    listener:
+      simple:
+        retry:
+          max-attempts: 2 #重试次数
+          enabled: true #启用重试
+          initial-interval: 3000 #重试间隔时间（单位毫秒）
+        default-requeue-rejected: false #重试次数超过上面的设置之后是否丢弃（false不丢弃时需要写相应代码将该消息加入死信队列）
+  #邮箱
+  mail:
+    enable: true
+    host: smtp.qq.com
+    username:
+    password:
+    port: 465
+    protocol: smtp
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.ssl.enable: true
+
+  #redis配置
+  redis:
+    database: 2
+    host:
+    password:
+    port: 6000
+    lettuce:
+      pool:
+        max-active: 2000
+        min-idle: 30
+        max-idle: 100
+    timeout: 10000
+
+  # 线程池配置
+  task:
+    execution:
+      pool:
+        core-size: 24
+        max-size: 100
+  servlet:
+    multipart:
+      max-file-size: 4MB
+
+#mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: cn.ruleengine.web.store.entity
+  type-enums-package: cn.ruleengine.web.enums
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: AUTO
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: not_empty
+      #逻辑删除配置
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      db-type: mysql
+      #表驼峰转下划线
+      table-underline: true
+    #缓存 Sql 解析初始化
+    sql-parser-cache: true
+  # 原生配置
+  configuration:
+    #驼峰转下划线
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    local-cache-scope: session
+
+
+#配置文件加密ENC()
+jasypt:
+  encryptor:
+    password: rule-engine-test-password
+
+#是否需要验证权限
+auth:
+  enable: true
+  jwt:
+    secretKey: ruleengine
+    #token失效时间(毫秒单位)
+    keepTime: -1 #废弃，由redis维护
+  redis.token:
+    keyPrefix: "rule-engine:token:"
+    keepTime: 3600000
+
+#阿里巴巴oss
+aliyun:
+  oss:
+    enable: true
+    endPoint:
+    accessKeyId:
+    accessKeySecret:
+    bucketName:
+    defaultFolder:
+
+swagger:
+  basic:
+    enable: true
+    username: dqw
+    password:
