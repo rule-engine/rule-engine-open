@@ -15,7 +15,8 @@
  */
 package cn.ruleengine.core.condition.compare;
 
-import cn.hutool.core.util.NumberUtil;
+
+import cn.hutool.core.util.StrUtil;
 import cn.ruleengine.core.condition.Compare;
 import cn.ruleengine.core.condition.Operator;
 import cn.ruleengine.core.exception.ConditionException;
@@ -24,6 +25,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -94,12 +96,31 @@ public class DateCompare implements Compare {
                 "yyyy.MM.dd", "yyyy.MM.dd HH:mm:ss", "yyyy.MM.dd HH:mm", "yyyy.MM"};
 
         /**
+         * 时间戳格式
+         */
+        private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("\\d{13}");
+
+
+        private String pattern;
+
+        /**
          * 给定日期的构造
          *
-         * @param date 日期
+         * @param pattern;
+         * @param date     日期
          */
+        public DateTime(Date date, String pattern) {
+            this(date.getTime());
+            this.pattern = pattern;
+        }
+
         public DateTime(Date date) {
             this(date.getTime());
+        }
+
+        public DateTime(long timeMillis, String pattern) {
+            super(timeMillis);
+            this.pattern = pattern;
         }
 
         public DateTime(long timeMillis) {
@@ -142,34 +163,47 @@ public class DateCompare implements Compare {
             if (object instanceof Date) {
                 return of((Date) object);
             }
+            // 时间戳
+            if (object instanceof Long) {
+                return of((long) object);
+            }
             // 2021-01-01 00:00:00
+            String dateString = String.valueOf(object);
             if (object instanceof String) {
                 // {@link DateCompare#PARSE_PATTERNS}
                 try {
-                    Date date = DateUtils.parseDate(String.valueOf(object), PARSE_PATTERNS);
+                    Date date = DateUtils.parseDate(dateString, PARSE_PATTERNS);
                     return new DateTime(date);
                 } catch (ParseException ignored) {
                     // ignored
                 }
             }
-            // 判断是否为时间戳
-            if (object instanceof Number || NumberUtil.isNumber(String.valueOf(object))) {
-                return new DateTime(Long.parseLong(String.valueOf(object)));
+            // 判断字符串是否为时间戳
+            if (TIMESTAMP_PATTERN.matcher(dateString).matches()) {
+                return new DateTime(Long.parseLong(dateString));
             }
             return null;
         }
 
         /**
-         * 转为"yyyy-MM-dd HH:mm:ss " 格式字符串
+         * 转为"yyyy-MM-dd HH:mm:ss " or pattern 格式字符串
          *
-         * @return "yyyy-MM-dd HH:mm:ss " 格式字符串
+         * @return 默认返回 "yyyy-MM-dd HH:mm:ss " 格式字符串
          */
         @Override
         public String toString() {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_PATTERN);
+            if (StrUtil.isNotBlank(pattern)) {
+                return this.toString(pattern);
+            }
+            return this.toString(DEFAULT_PATTERN);
+        }
+
+        public String toString(String pattern) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             return simpleDateFormat.format(this);
         }
 
     }
+
 
 }

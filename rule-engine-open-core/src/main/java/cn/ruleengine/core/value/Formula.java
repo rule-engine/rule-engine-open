@@ -233,48 +233,42 @@ public class Formula implements Value {
         @Getter
         private final Expression expression;
         @Getter
-        private final Set<String> inputParameterCodes;
+        private final Set<String> inputParameterCodes = new HashSet<>();
 
         public ExpressionProcessor(String value) {
             this.value = value;
             this.expression = this.verifyAndGetFormula(value);
-            this.inputParameterCodes = this.getExpressionParamCode(this.expression);
+            if (((SpelExpression) this.expression).getAST() instanceof SpelNodeImpl) {
+                SpelNodeImpl spelNode = (SpelNodeImpl) ((SpelExpression) this.expression).getAST();
+                this.analysisSpelNodeVariable(spelNode);
+            }
         }
 
         /**
          * 解析表达式中的所有参数code
-         *
-         * @param expression e
-         * @return l
-         */
-        private Set<String> getExpressionParamCode(Expression expression) {
-            Set<String> inputParameterCodes = new HashSet<>();
-            if (((SpelExpression) expression).getAST() instanceof SpelNodeImpl) {
-                SpelNodeImpl spelNode = (SpelNodeImpl) ((SpelExpression) expression).getAST();
-                this.listSpelNodeVariable(inputParameterCodes, spelNode);
-            }
-            return inputParameterCodes;
-        }
-
-        /**
+         * <p>
          * 获取节点中的所有的变量
          * <p>
          * #param
          *
          * @param spelNode spel节点
          */
-        private void listSpelNodeVariable(Set<String> inputParameterCodes, SpelNode spelNode) {
+        private void analysisSpelNodeVariable(SpelNode spelNode) {
+            if (spelNode == null) {
+                return;
+            }
+            if (spelNode instanceof VariableReference) {
+                VariableReference variableReference = (VariableReference) spelNode;
+                this.inputParameterCodes.add(variableReference.toStringAST().substring(1));
+            }
+            // 是否还有子标签
             int childCount = spelNode.getChildCount();
             if (childCount == 0) {
                 return;
             }
             for (int i = 0; i < childCount; i++) {
                 SpelNode child = spelNode.getChild(i);
-                if (child instanceof VariableReference) {
-                    VariableReference variableReference = (VariableReference) child;
-                    inputParameterCodes.add(variableReference.toStringAST().substring(1));
-                }
-                this.listSpelNodeVariable(inputParameterCodes, child);
+                this.analysisSpelNodeVariable(child);
             }
         }
 
@@ -291,6 +285,11 @@ public class Formula implements Value {
             }
         }
 
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, expression, valueType);
     }
 
 }

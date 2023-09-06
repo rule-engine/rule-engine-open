@@ -75,4 +75,22 @@ public class Executor implements Value {
         return this.valueType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Executor executor = (Executor) o;
+        return Objects.equals(id, executor.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+
 }

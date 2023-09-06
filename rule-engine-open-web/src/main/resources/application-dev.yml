@@ -118,15 +118,12 @@ mybatis-plus:
       #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
       id-type: AUTO
       #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
-      field-strategy: not_empty
+      whereStrategy: NOT_EMPTY
       #逻辑删除配置
       logic-delete-value: 1
       logic-not-delete-value: 0
-      db-type: mysql
       #表驼峰转下划线
       table-underline: true
-    #缓存 Sql 解析初始化
-    sql-parser-cache: true
   # 原生配置
   configuration:
     #驼峰转下划线

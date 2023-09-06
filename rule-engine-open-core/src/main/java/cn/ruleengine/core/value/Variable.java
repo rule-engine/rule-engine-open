@@ -20,6 +20,8 @@ import cn.ruleengine.core.RuleEngineConfiguration;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 /**
  * 〈一句话功能简述〉<br>
  * 〈〉
@@ -80,6 +82,11 @@ public class Variable implements Value {
         }
         // 如果id一样，则是同一个变量
         return this.variableId.equals(((Variable) obj).variableId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(variableId);
     }
 
 }

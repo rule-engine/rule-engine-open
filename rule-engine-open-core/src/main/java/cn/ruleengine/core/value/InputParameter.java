@@ -21,6 +21,8 @@ import cn.ruleengine.core.condition.compare.DateCompare;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 /**
  * 〈一句话功能简述〉<br>
  * 〈〉
@@ -54,15 +56,19 @@ public class InputParameter implements Value {
     InputParameter() {
     }
 
-    public InputParameter(Integer inputParameterId, String inputParameterCode, ValueType valueType) {
-        this.inputParameterId = inputParameterId;
-        this.inputParameterCode = inputParameterCode;
+    public InputParameter(Integer id, String code, ValueType valueType) {
+        this.inputParameterId = id;
+        this.inputParameterCode = code;
         this.valueType = valueType;
+    }
+
+    public InputParameter(String code, ValueType valueType) {
+        this(null, code, valueType);
     }
 
     @Override
     public Object getValue(Input input, RuleEngineConfiguration configuration) {
-        Object value = input.get(this.getInputParameterCode());
+        Object value = input.get(this.inputParameterCode);
         return this.dataConversion(value, this.getValueType());
     }
 
@@ -71,16 +77,24 @@ public class InputParameter implements Value {
         return this.valueType;
     }
 
-
     @Override
-    public boolean equals(Object other) {
-        if (this == other) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (!(other instanceof InputParameter)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        InputParameter inputParameter = (InputParameter) other;
-        return inputParameter.getInputParameterId().equals(this.getInputParameterId());
+        InputParameter that = (InputParameter) o;
+        if (inputParameterId != null && that.inputParameterId != null) {
+            return Objects.equals(inputParameterId, that.inputParameterId);
+        }
+        return Objects.equals(inputParameterCode, that.inputParameterCode) && valueType == that.valueType;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(inputParameterId, inputParameterCode, valueType);
+    }
+
 }

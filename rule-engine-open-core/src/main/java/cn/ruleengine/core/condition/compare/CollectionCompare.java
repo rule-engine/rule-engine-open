@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2020 dingqianwen (761945125@qq.com)
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +21,7 @@ import cn.ruleengine.core.condition.Compare;
 import cn.ruleengine.core.condition.Operator;
 import cn.ruleengine.core.exception.ConditionException;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -72,8 +70,16 @@ public class CollectionCompare implements Compare {
                 if (leftValueColl.size() != rightValueColl.size()) {
                     return false;
                 }
-                for (Object value : leftValueColl) {
-                    if (!rightValueColl.contains(value)) {
+                if (leftValueColl == rightValueColl) {
+                    return true;
+                }
+                Iterator<?> leftValueIterator = leftValueColl.iterator();
+                Iterator<?> rightValueIterator = rightValueColl.iterator();
+                while (leftValueIterator.hasNext() && rightValueIterator.hasNext()) {
+                    Object leftValueElement = leftValueIterator.next();
+                    Object rightValueElement = rightValueIterator.next();
+                    // 依次对比
+                    if (!Objects.equals(leftValueElement, rightValueElement)) {
                         return false;
                     }
                 }
@@ -103,17 +109,28 @@ public class CollectionCompare implements Compare {
         }
     }
 
-    private boolean containsAll(Object rightValue, Object leftValue) {
-        Collection<?> rightValueColl = (Collection<?>) rightValue;
-        Collection<?> leftValueColl = (Collection<?>) leftValue;
-        if (CollUtil.isEmpty(leftValueColl) || CollUtil.isEmpty(rightValueColl)) {
-            return false;
+    /**
+     * 集合1中是否包含集合2中所有的元素，即集合2是否为集合1的子集
+     *
+     * @param collObj1 集合1
+     * @param collObj2 集合2
+     * @return 集合1中是否包含集合2中所有的元素
+     */
+    private boolean containsAll(Object collObj1, Object collObj2) {
+        Collection<?> coll1 = (Collection<?>) collObj1;
+        Collection<?> coll2 = (Collection<?>) collObj2;
+        if (CollUtil.isEmpty(coll1)) {
+            return CollUtil.isEmpty(coll2);
         }
-        Set<String> rightSet = rightValueColl.stream().map(String::valueOf).collect(Collectors.toSet());
-        Set<String> leftSet = leftValueColl.stream().map(String::valueOf).collect(Collectors.toSet());
-        int rightSize = rightSet.size();
-        leftSet.addAll(rightSet);
-        return leftSet.size() == rightSize;
+        if (CollUtil.isEmpty(coll2)) {
+            return true;
+        }
+        for (Object object : coll2) {
+            if (!coll1.contains(object)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

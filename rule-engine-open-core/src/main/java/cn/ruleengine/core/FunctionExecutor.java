@@ -297,20 +297,20 @@ public class FunctionExecutor {
             // 如果类型不匹配则可能引起问题 例如Bean中属性List<BigDecimal> list，但是传入的为字符串list=a,b,c
             Object newInstance = constructor.newInstance();
             BeanUtil.copyProperties(paramValue, newInstance);
-            //如果参数前面有Valid注解
-            if (parameter.isAnnotationPresent(Valid.class)) {
-                //验证某个对象,，其实也可以只验证其中的某一个属性的
-                Set<ConstraintViolation<Object>> constraintViolations = VALIDATOR.validate(newInstance);
-                Iterator<ConstraintViolation<Object>> iter = constraintViolations.iterator();
-                if (iter.hasNext()) {
-                    ConstraintViolation<Object> next = iter.next();
-                    String messageTemplate = next.getMessageTemplate();
-                    if (messageTemplate == null) {
-                        throw new ValueException(next.getMessage());
-                    }
-                    if (messageTemplate.startsWith(StrUtil.DELIM_START) && messageTemplate.endsWith(StrUtil.DELIM_END)) {
-                        throw new ValueException(next.getPropertyPath().toString() + " " + next.getMessage());
-                    }
+            // 如果参数没有有Valid注解
+            if (!parameter.isAnnotationPresent(Valid.class)) {
+                return newInstance;
+            }
+            // 验证某个对象,，其实也可以只验证其中的某一个属性的
+            Set<ConstraintViolation<Object>> constraintViolations = VALIDATOR.validate(newInstance);
+            Iterator<ConstraintViolation<Object>> iter = constraintViolations.iterator();
+            if (iter.hasNext()) {
+                ConstraintViolation<Object> next = iter.next();
+                String messageTemplate = next.getMessageTemplate();
+                if (messageTemplate.startsWith(StrUtil.DELIM_START) && messageTemplate.endsWith(StrUtil.DELIM_END)) {
+                    throw new ValueException(next.getPropertyPath().toString() + " " + next.getMessage());
+                } else {
+                    throw new ValueException(next.getMessage());
                 }
             }
             return newInstance;

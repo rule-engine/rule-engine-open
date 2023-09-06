@@ -15,18 +15,17 @@
  */
 package cn.ruleengine.core.value;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.ruleengine.core.Input;
 import cn.ruleengine.core.RuleEngineConfiguration;
-import cn.ruleengine.core.condition.compare.BooleanCompare;
+import cn.ruleengine.core.Input;
 import cn.ruleengine.core.condition.compare.DateCompare;
 import cn.ruleengine.core.exception.ValueException;
+import cn.ruleengine.core.condition.compare.BooleanCompare;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -64,7 +63,7 @@ public interface Value {
      */
     default Object dataConversion(Object value, ValueType valueType) {
         Objects.requireNonNull(valueType);
-        // 如果为null 或者字符
+        // 如果为null
         if (Objects.isNull(value)) {
             return null;
         }
@@ -73,17 +72,21 @@ public interface Value {
         // 根据valueType 解析值 获取对应的类型
         switch (valueType) {
             case COLLECTION:
-                /*
-                 * 为空时集合返回一个 Collections.emptyList() 而不是 null
-                 * <br>
-                 * 主要应对：如果集合[1，2，3] CONTAIN [] 返回true
-                 */
-                if (valueString.isEmpty()) {
-                    return Collections.emptyList();
-                }
                 if (value instanceof Collection) {
-                    return value;
+                    Collection<?> collection = (Collection<?>) value;
+                    if (CollUtil.isEmpty(collection)) {
+                        return Collections.emptyList();
+                    }
+                    // 集合统一返回字符串类型的List
+                    return collection.stream().map(String::valueOf).collect(Collectors.toList());
                 } else {
+                    /*
+                     * 为空时集合返回一个 Collections.emptyList() 而不是 null
+                     */
+                    if (valueString.isEmpty()) {
+                        return Collections.emptyList();
+                    }
+                    // 字符串转集合
                     return Arrays.asList(valueString.split(","));
                 }
             case NUMBER:
@@ -124,6 +127,8 @@ public interface Value {
                     return dateTime;
                 }
                 throw new ValueException(value + "日期格式错误");
+            case UNKNOWN:
+                return value;
             default:
                 throw new ValueException("不支持的数据类型" + valueType);
         }

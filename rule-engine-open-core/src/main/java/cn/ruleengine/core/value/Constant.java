@@ -16,8 +16,8 @@
 package cn.ruleengine.core.value;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.ruleengine.core.Input;
 import cn.ruleengine.core.RuleEngineConfiguration;
+import cn.ruleengine.core.Input;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.lang.NonNull;
@@ -107,6 +107,10 @@ public class Constant implements Value {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, valueType);
+    }
 
     @Override
     public ValueType getValueType() {
@@ -117,4 +121,5 @@ public class Constant implements Value {
     public Object getValue(Input input, RuleEngineConfiguration configuration) {
         return this.getValue();
     }
+
 }
