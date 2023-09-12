@@ -466,3 +466,20 @@ create index rule_engine_workspace_name_index
 INSERT INTO rule_engine_workspace (id, code, name, access_key_id, access_key_secret, description, create_time, update_time, deleted) VALUES (1, 'default', '默认工作空间', 'root', '123456', '默认的', '2020-11-21 02:41:33', '2020-11-21 02:41:34', 0);
 INSERT INTO rule_engine_workspace (id, code, name, access_key_id, access_key_secret, description, create_time, update_time, deleted) VALUES (2, 'test', '测试', 'gdfhdgfh', 'sdfasdfas', '供测试使用', '2020-11-21 19:36:12', '2020-11-21 19:36:13', 0);
 INSERT INTO rule_engine_workspace (id, code, name, access_key_id, access_key_secret, description, create_time, update_time, deleted) VALUES (4, 'prd', '线上', 'asdfasdf', 'asasdfasdfas', '请勿随意修改', '2020-11-07 21:49:36', '2020-11-07 21:49:38', 0);
+
+
+
+CREATE TABLE `rule_engine_data_permission` (
+                                               `id` int(11) NOT NULL AUTO_INCREMENT,
+                                               `user_id` int(11) DEFAULT NULL,
+                                               `data_type` int(11) NOT NULL COMMENT '0：规则  1：规则集  2：决策表',
+                                               `data_id` int(11) NOT NULL COMMENT '如果data_type=0 则此data_id为规则的id',
+                                               `read_authority` tinyint(4) DEFAULT NULL COMMENT '0有读权限',
+                                               `write_authority` tinyint(4) DEFAULT NULL COMMENT '0有写权限',
+                                               `publish_authority` tinyint(4) DEFAULT NULL COMMENT '0有发布规则权限',
+                                               `create_user_id` int(11) DEFAULT NULL COMMENT '谁添加的这个权限，可以是这个规则的创建人，也可以是管理',
+                                               `create_time` timestamp NULL DEFAULT NULL,
+                                               `update_time` timestamp NULL DEFAULT NULL,
+                                               `deleted` tinyint(4) DEFAULT NULL,
+                                               PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户数据权限表';
