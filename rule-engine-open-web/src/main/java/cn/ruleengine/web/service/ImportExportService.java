@@ -1,7 +1,7 @@
 package cn.ruleengine.web.service;
 
-import cn.ruleengine.web.vo.importexport.ExportRequest;
-import cn.ruleengine.web.vo.importexport.ExportResponse;
+import cn.ruleengine.web.vo.data.file.ExportRequest;
+import cn.ruleengine.web.vo.data.file.ExportResponse;
 
 /**
  * 〈ImportExportService〉

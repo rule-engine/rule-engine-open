@@ -14,10 +14,10 @@ import cn.ruleengine.web.store.entity.*;
 import cn.ruleengine.web.store.manager.*;
 import cn.ruleengine.web.store.mapper.RuleEngineDataReferenceMapper;
 import cn.ruleengine.web.vo.condition.*;
-import cn.ruleengine.web.vo.datareference.ReferenceData;
-import cn.ruleengine.web.vo.datareference.ReferenceDataMap;
-import cn.ruleengine.web.vo.generalrule.DefaultAction;
-import cn.ruleengine.web.vo.generalrule.GeneralRuleBody;
+import cn.ruleengine.web.vo.reference.ReferenceData;
+import cn.ruleengine.web.vo.reference.ReferenceDataMap;
+import cn.ruleengine.web.vo.rule.general.DefaultAction;
+import cn.ruleengine.web.vo.rule.general.GeneralRuleBody;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Service;
 

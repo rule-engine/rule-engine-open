@@ -10,7 +10,7 @@ import cn.ruleengine.web.store.manager.RuleEngineRuleManager;
 import cn.ruleengine.web.store.mapper.RuleEngineRuleMapper;
 import cn.ruleengine.web.vo.condition.ConditionGroupConfig;
 import cn.ruleengine.web.vo.condition.ConfigValue;
-import cn.ruleengine.web.vo.generalrule.SaveActionRequest;
+import cn.ruleengine.web.vo.rule.general.SaveActionRequest;
 import cn.ruleengine.web.vo.rule.RuleBody;
 import org.springframework.stereotype.Service;
 

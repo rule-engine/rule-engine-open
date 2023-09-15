@@ -17,7 +17,6 @@ import cn.ruleengine.web.store.entity.RuleEngineUserWorkspace;
 import cn.ruleengine.web.store.manager.RuleEngineUserManager;
 import cn.ruleengine.web.store.manager.RuleEngineUserWorkspaceManager;
 import cn.ruleengine.web.util.*;
-import cn.ruleengine.web.vo.convert.BasicConversion;
 import cn.ruleengine.web.vo.user.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -51,6 +50,15 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+    /**
+     * 注册时验证码存入redis的前缀
+     */
+    private static final String REGISTER_EMAIL_CODE_PRE = "rule_engine_user_register_email_code_pre:";
+    /**
+     * 忘记密码时验证码存入redis的前缀
+     */
+    private static final String FORGOT_EMAIL_CODE_PRE = "rule_engine_boot_user_forgot_email_code_pre:";
+
     @Resource
     private RuleEngineUserManager ruleEngineUserManager;
     @Resource
@@ -68,15 +76,6 @@ public class UserServiceImpl implements UserService {
     public Long redisTokenKeepTime;
     @Value("${auth.jwt.issuer:ruleengine}")
     private String issuer;
-
-    /**
-     * 注册时验证码存入redis的前缀
-     */
-    private static final String REGISTER_EMAIL_CODE_PRE = "rule_engine_user_register_email_code_pre:";
-    /**
-     * 忘记密码时验证码存入redis的前缀
-     */
-    private static final String FORGOT_EMAIL_CODE_PRE = "rule_engine_boot_user_forgot_email_code_pre:";
 
     /**
      * 用户登录
@@ -110,7 +109,7 @@ public class UserServiceImpl implements UserService {
      * @param ruleEngineUser 用户信息
      */
     private void refreshUserData(String token, RuleEngineUser ruleEngineUser) {
-        UserData userData = BasicConversion.INSTANCE.convert(ruleEngineUser);
+        UserData userData = BeanUtil.copyProperties(ruleEngineUser, UserData.class);
         RBucket<UserData> bucket = this.redissonClient.getBucket(this.tokenKeyPrefix.concat(token));
         //保存到redis,用户访问时获取
         bucket.set(userData, this.redisTokenKeepTime, TimeUnit.MILLISECONDS);
@@ -233,7 +232,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserInfo() {
         UserData userData = Context.getCurrentUser();
-        return BasicConversion.INSTANCE.convert(userData);
+        return OrikaBeanMapper.map(userData, UserResponse.class);
     }
 
 

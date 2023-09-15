@@ -24,7 +24,7 @@ import cn.ruleengine.web.annotation.ReSubmitLock;
 import cn.ruleengine.web.enums.DataType;
 import cn.ruleengine.web.enums.OperationType;
 import cn.ruleengine.web.service.InputParameterService;
-import cn.ruleengine.web.vo.inputparameter.*;
+import cn.ruleengine.web.vo.parameter.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;

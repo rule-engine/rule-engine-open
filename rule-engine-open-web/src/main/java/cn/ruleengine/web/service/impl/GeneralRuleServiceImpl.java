@@ -23,14 +23,14 @@ import cn.ruleengine.web.service.*;
 import cn.ruleengine.web.store.entity.*;
 import cn.ruleengine.web.store.manager.*;
 import cn.ruleengine.web.store.mapper.RuleEngineGeneralRuleMapper;
+import cn.ruleengine.web.util.OrikaBeanMapper;
 import cn.ruleengine.web.util.PageUtils;
 import cn.ruleengine.web.vo.common.DownloadListResponse;
 import cn.ruleengine.web.vo.common.GoBackRequest;
 import cn.ruleengine.web.vo.common.HistoryListResponse;
 import cn.ruleengine.web.vo.common.ViewRequest;
 import cn.ruleengine.web.vo.condition.ConfigValue;
-import cn.ruleengine.web.vo.convert.BasicConversion;
-import cn.ruleengine.web.vo.generalrule.*;
+import cn.ruleengine.web.vo.rule.general.*;
 import cn.ruleengine.web.vo.user.UserData;
 import cn.ruleengine.web.vo.workspace.Workspace;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -211,7 +211,7 @@ public class GeneralRuleServiceImpl implements GeneralRuleService {
         if (engineGeneralRule == null) {
             return null;
         }
-        return BasicConversion.INSTANCE.convert(engineGeneralRule);
+        return OrikaBeanMapper.map(engineGeneralRule, GeneralRuleDefinition.class);
     }
 
 

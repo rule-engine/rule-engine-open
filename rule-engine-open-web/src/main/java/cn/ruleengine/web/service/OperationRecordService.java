@@ -2,8 +2,8 @@ package cn.ruleengine.web.service;
 
 import cn.ruleengine.common.vo.PageRequest;
 import cn.ruleengine.common.vo.PageResult;
-import cn.ruleengine.web.vo.operationrecord.OperationRecordRequest;
-import cn.ruleengine.web.vo.operationrecord.OperationRecordResponse;
+import cn.ruleengine.web.vo.operation.record.OperationRecordRequest;
+import cn.ruleengine.web.vo.operation.record.OperationRecordResponse;
 
 /**
  * 〈OperationRecordService〉

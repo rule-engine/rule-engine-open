@@ -3,7 +3,7 @@ package cn.ruleengine.web.service;
 
 import cn.ruleengine.common.vo.PageRequest;
 import cn.ruleengine.common.vo.PageResult;
-import cn.ruleengine.web.vo.inputparameter.*;
+import cn.ruleengine.web.vo.parameter.*;
 
 /**
  * 〈一句话功能简述〉<br>

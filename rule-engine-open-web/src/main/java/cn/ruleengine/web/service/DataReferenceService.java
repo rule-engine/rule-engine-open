@@ -1,9 +1,9 @@
 package cn.ruleengine.web.service;
 
 import cn.ruleengine.core.Parameter;
-import cn.ruleengine.web.vo.datareference.ReferenceData;
-import cn.ruleengine.web.vo.datareference.ReferenceDataMap;
-import cn.ruleengine.web.vo.generalrule.GeneralRuleBody;
+import cn.ruleengine.web.vo.reference.ReferenceData;
+import cn.ruleengine.web.vo.reference.ReferenceDataMap;
+import cn.ruleengine.web.vo.rule.general.GeneralRuleBody;
 
 import java.util.Collection;
 import java.util.Map;

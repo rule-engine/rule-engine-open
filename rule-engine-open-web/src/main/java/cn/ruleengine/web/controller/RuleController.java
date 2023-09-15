@@ -3,7 +3,7 @@ package cn.ruleengine.web.controller;
 import cn.ruleengine.common.vo.BaseResult;
 import cn.ruleengine.common.vo.PlainResult;
 import cn.ruleengine.web.service.RuleService;
-import cn.ruleengine.web.vo.generalrule.SaveActionRequest;
+import cn.ruleengine.web.vo.rule.general.SaveActionRequest;
 import cn.ruleengine.web.vo.rule.RuleBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 〈RuleController〉

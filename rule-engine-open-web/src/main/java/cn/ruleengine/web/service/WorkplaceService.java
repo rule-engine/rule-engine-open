@@ -1,10 +1,6 @@
 package cn.ruleengine.web.service;
 
 import cn.ruleengine.web.vo.workplace.HeadInfoResponse;
-import cn.ruleengine.web.vo.workplace.NumberOfCreationsRankingResponse;
-import cn.ruleengine.web.vo.workplace.ProjectInProgressResponse;
-
-import java.util.List;
 
 /**
  * 〈WorkplaceService〉
@@ -15,12 +11,6 @@ import java.util.List;
  */
 public interface WorkplaceService {
 
-    /**
-     * 进行中的项目
-     *
-     * @return  list
-     */
-    List<ProjectInProgressResponse> projectInProgress();
 
     /**
      * HeadInfo
@@ -28,12 +18,5 @@ public interface WorkplaceService {
      * @return r
      */
     HeadInfoResponse headInfo();
-
-    /**
-     * 创作数量排名
-     *
-     * @return r
-     */
-    List<NumberOfCreationsRankingResponse> numberOfCreationsRanking();
 
 }

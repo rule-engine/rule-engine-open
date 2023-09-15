@@ -34,6 +34,9 @@ public class UserData implements Serializable {
     private String description;
 
     public Boolean getIsAdmin() {
+        if (this.isAdmin == null) {
+            return false;
+        }
         return this.isAdmin == 0;
     }
 

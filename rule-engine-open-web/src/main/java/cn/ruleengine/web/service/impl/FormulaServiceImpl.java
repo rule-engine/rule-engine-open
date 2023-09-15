@@ -16,8 +16,8 @@ import cn.ruleengine.web.store.entity.RuleEngineFormula;
 import cn.ruleengine.web.store.entity.RuleEngineInputParameter;
 import cn.ruleengine.web.store.manager.RuleEngineFormulaManager;
 import cn.ruleengine.web.store.manager.RuleEngineInputParameterManager;
+import cn.ruleengine.web.util.OrikaBeanMapper;
 import cn.ruleengine.web.util.PageUtils;
-import cn.ruleengine.web.vo.convert.BasicConversion;
 import cn.ruleengine.web.vo.formula.*;
 import cn.ruleengine.web.vo.workspace.Workspace;
 import com.alibaba.fastjson.JSON;
@@ -89,7 +89,7 @@ public class FormulaServiceImpl implements FormulaService {
                 lambdaQueryWrapper.eq(RuleEngineFormula::getDataType, query.getDataType());
             }
             return wrapper;
-        }, BasicConversion.INSTANCE::convert);
+        }, (v) -> OrikaBeanMapper.map(v, FormulaListResponse.class));
     }
 
     /**

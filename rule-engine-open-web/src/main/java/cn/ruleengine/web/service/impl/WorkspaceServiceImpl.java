@@ -20,8 +20,8 @@ import cn.ruleengine.web.store.manager.RuleEngineUserManager;
 import cn.ruleengine.web.store.manager.RuleEngineUserWorkspaceManager;
 import cn.ruleengine.web.store.manager.RuleEngineWorkspaceManager;
 import cn.ruleengine.web.store.mapper.RuleEngineWorkspaceMapper;
+import cn.ruleengine.web.util.OrikaBeanMapper;
 import cn.ruleengine.web.util.PageUtils;
-import cn.ruleengine.web.vo.convert.BasicConversion;
 import cn.ruleengine.web.vo.user.UserData;
 import cn.ruleengine.web.vo.workspace.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -133,7 +133,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         if (CollUtil.isEmpty(ruleEngineWorkspaces)) {
             return Collections.emptyList();
         }
-        List<ListWorkspaceResponse> listWorkspaceResponses = BasicConversion.INSTANCE.convert(ruleEngineWorkspaces);
+        List<ListWorkspaceResponse> listWorkspaceResponses = OrikaBeanMapper.mapList(ruleEngineWorkspaces, ListWorkspaceResponse.class);
         List<Integer> workspaceIds = listWorkspaceResponses.stream().map(Workspace::getId).collect(Collectors.toList());
         if (CollUtil.isEmpty(workspaceIds)) {
             return listWorkspaceResponses;

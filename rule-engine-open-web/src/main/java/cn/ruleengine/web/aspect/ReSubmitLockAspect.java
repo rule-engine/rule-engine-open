@@ -87,7 +87,10 @@ public class ReSubmitLockAspect {
             log.info("{}方法加锁成功，Lock Key:{}", method.getName(), lockKey);
             return joinPoint.proceed();
         } finally {
-            rLock.unlock();
+            try {
+                rLock.unlock();
+            } catch (Exception ignored) {
+            }
             log.info("{}方法锁已经移除，Lock Key:{}", method.getName(), lockKey);
         }
     }

@@ -24,8 +24,8 @@ import cn.ruleengine.web.store.manager.RuleEngineFunctionManager;
 import cn.ruleengine.web.store.manager.RuleEngineFunctionValueManager;
 import cn.ruleengine.web.store.manager.RuleEngineInputParameterManager;
 import cn.ruleengine.web.store.manager.RuleEngineVariableManager;
+import cn.ruleengine.web.util.OrikaBeanMapper;
 import cn.ruleengine.web.util.PageUtils;
-import cn.ruleengine.web.vo.convert.BasicConversion;
 import cn.ruleengine.web.vo.user.UserData;
 import cn.ruleengine.web.vo.variable.*;
 import cn.ruleengine.web.vo.workspace.Workspace;
@@ -240,7 +240,7 @@ public class VariableServiceImpl implements VariableService {
         if (ruleEngineVariable == null) {
             return null;
         }
-        GetVariableResponse variableResponse = BasicConversion.INSTANCE.convert(ruleEngineVariable);
+        GetVariableResponse variableResponse = OrikaBeanMapper.map(ruleEngineVariable, GetVariableResponse.class);
         if (ruleEngineVariable.getType().equals(VariableType.CONSTANT.getType())) {
             return variableResponse;
         } else if (ruleEngineVariable.getType().equals(VariableType.FUNCTION.getType())) {

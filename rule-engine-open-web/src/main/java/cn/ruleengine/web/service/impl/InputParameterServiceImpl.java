@@ -18,9 +18,9 @@ import cn.ruleengine.web.store.entity.RuleEngineVariable;
 import cn.ruleengine.web.store.manager.RuleEngineInputParameterManager;
 import cn.ruleengine.web.store.manager.RuleEngineVariableManager;
 import cn.ruleengine.web.store.mapper.RuleEngineFormulaMapper;
+import cn.ruleengine.web.util.OrikaBeanMapper;
 import cn.ruleengine.web.util.PageUtils;
-import cn.ruleengine.web.vo.convert.BasicConversion;
-import cn.ruleengine.web.vo.inputparameter.*;
+import cn.ruleengine.web.vo.parameter.*;
 import cn.ruleengine.web.vo.user.UserData;
 import cn.ruleengine.web.vo.workspace.Workspace;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -139,7 +139,7 @@ public class InputParameterServiceImpl implements InputParameterService {
         RuleEngineInputParameter inputParameter = this.ruleEngineInputParameterManager.lambdaQuery()
                 .eq(RuleEngineInputParameter::getId, id)
                 .one();
-        return BasicConversion.INSTANCE.convert(inputParameter);
+        return OrikaBeanMapper.map(inputParameter, GetInputParameterResponse.class);
     }
 
     /**

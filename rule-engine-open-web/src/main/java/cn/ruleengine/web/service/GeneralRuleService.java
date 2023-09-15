@@ -7,7 +7,7 @@ import cn.ruleengine.web.vo.common.DownloadListResponse;
 import cn.ruleengine.web.vo.common.GoBackRequest;
 import cn.ruleengine.web.vo.common.HistoryListResponse;
 import cn.ruleengine.web.vo.common.ViewRequest;
-import cn.ruleengine.web.vo.generalrule.*;
+import cn.ruleengine.web.vo.rule.general.*;
 
 /**
  * 〈一句话功能简述〉<br>

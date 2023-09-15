@@ -6,8 +6,8 @@ import cn.ruleengine.web.exception.ApiException;
 import cn.ruleengine.web.service.ImportExportService;
 import cn.ruleengine.web.store.entity.RuleEngineGeneralRulePublish;
 import cn.ruleengine.web.store.manager.RuleEngineGeneralRulePublishManager;
-import cn.ruleengine.web.vo.importexport.ExportRequest;
-import cn.ruleengine.web.vo.importexport.ExportResponse;
+import cn.ruleengine.web.vo.data.file.ExportRequest;
+import cn.ruleengine.web.vo.data.file.ExportResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

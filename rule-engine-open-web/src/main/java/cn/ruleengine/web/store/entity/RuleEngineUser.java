@@ -38,6 +38,7 @@ public class RuleEngineUser implements Serializable {
 
     private Long phone;
 
+    @TableField("is_admin")
     private Integer isAdmin;
 
     private String description;

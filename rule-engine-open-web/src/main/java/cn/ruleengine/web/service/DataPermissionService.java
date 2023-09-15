@@ -3,9 +3,9 @@ package cn.ruleengine.web.service;
 import cn.ruleengine.common.vo.PageRequest;
 import cn.ruleengine.common.vo.PageResult;
 import cn.ruleengine.web.annotation.DataPermission;
-import cn.ruleengine.web.vo.datapermission.ListDataPermissionRequest;
-import cn.ruleengine.web.vo.datapermission.ListDataPermissionResponse;
-import cn.ruleengine.web.vo.datapermission.UpdateDataPermissionRequest;
+import cn.ruleengine.web.vo.permission.data.ListDataPermissionRequest;
+import cn.ruleengine.web.vo.permission.data.ListDataPermissionResponse;
+import cn.ruleengine.web.vo.permission.data.UpdateDataPermissionRequest;
 
 import java.io.Serializable;
 

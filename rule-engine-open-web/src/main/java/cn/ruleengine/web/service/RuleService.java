@@ -1,6 +1,6 @@
 package cn.ruleengine.web.service;
 
-import cn.ruleengine.web.vo.generalrule.SaveActionRequest;
+import cn.ruleengine.web.vo.rule.general.SaveActionRequest;
 import cn.ruleengine.web.vo.rule.RuleBody;
 
 

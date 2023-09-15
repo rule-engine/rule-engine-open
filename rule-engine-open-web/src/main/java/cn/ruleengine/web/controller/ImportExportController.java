@@ -2,8 +2,8 @@ package cn.ruleengine.web.controller;
 
 import cn.ruleengine.common.vo.PlainResult;
 import cn.ruleengine.web.service.ImportExportService;
-import cn.ruleengine.web.vo.importexport.ExportRequest;
-import cn.ruleengine.web.vo.importexport.ExportResponse;
+import cn.ruleengine.web.vo.data.file.ExportRequest;
+import cn.ruleengine.web.vo.data.file.ExportResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
