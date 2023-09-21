@@ -10,7 +10,7 @@
 
 #### 业务逻辑实现不再依赖于代码开发，可零代码实现复杂业务逻辑。
 
-前端代码地址：https://gitee.com/qwding/rule-engine-front-v2  
+前端代码地址：https://gitee.com/aizuda/rule-engine-front-open  
 项目展示地址：http://ruleengine.cn/
 
 ##### 联系方式：
@@ -21,8 +21,8 @@
 ### 关于提出Bug奖励
 
 如果项目在使用过程中，发现项目缺陷或者漏洞等问题，可以在以下地址中提出问题反馈：  
-Gitee：https://gitee.com/qwding/rule-engine-v2/issues  
-Github：https://github.com/dingqianwen/rule-engine-v2/issues
+Gitee：https://gitee.com/aizuda/rule-engine-open/issues  
+Github：https://github.com/rule-engine/rule-engine-open/issues
 
 ### 技术文档
 
