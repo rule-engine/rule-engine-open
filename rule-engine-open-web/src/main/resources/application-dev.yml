@@ -151,7 +151,7 @@ auth:
 #阿里巴巴oss
 aliyun:
   oss:
-    enable: true
+    enable: false
     endPoint:
     accessKeyId:
     accessKeySecret:
@@ -162,4 +162,4 @@ swagger:
   basic:
     enable: true
     username: dqw
-    password:
+    password: 123456

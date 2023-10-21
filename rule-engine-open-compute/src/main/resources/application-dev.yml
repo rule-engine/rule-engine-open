@@ -118,4 +118,4 @@ swagger:
   basic:
     enable: true
     username: dqw
-    password:
+    password: 123456
