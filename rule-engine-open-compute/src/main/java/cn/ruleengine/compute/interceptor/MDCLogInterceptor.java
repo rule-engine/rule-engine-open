@@ -15,7 +15,6 @@
  */
 package cn.ruleengine.compute.interceptor;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.lang.NonNull;
@@ -25,7 +24,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -40,7 +38,7 @@ import java.util.UUID;
 @Component
 public class MDCLogInterceptor extends HandlerInterceptorAdapter {
 
-    private final static String REQUEST_ID = "requestId";
+    public final static String REQUEST_ID = "requestId";
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
@@ -50,7 +48,7 @@ public class MDCLogInterceptor extends HandlerInterceptorAdapter {
             // 否则生成一个
             requestId = UUID.randomUUID().toString();
         }
-        MDC.put(REQUEST_ID, REQUEST_ID.concat(StringPool.COLON).concat(requestId));
+        MDC.put(REQUEST_ID, requestId);
         return true;
     }
 
@@ -60,29 +58,12 @@ public class MDCLogInterceptor extends HandlerInterceptorAdapter {
     }
 
     /**
-     * 获取requestid
+     * 获取request id
      *
-     * @return requestid
-     * @see MDCLogInterceptor#getRequestId(boolean)
+     * @return request id
      */
     public static String getRequestId() {
-        return getRequestId(true);
-    }
-
-    /**
-     * 获取requestid
-     * <p>
-     * requestId:b9557a4c-c86b-4f90-8782-8a24674ad3a9
-     * false返回requestId:b9557a4c-c86b-4f90-8782-8a24674ad3a9
-     * true返回b9557a4c-c86b-4f90-8782-8a24674ad3a9
-     *
-     * @param removePrefix 是否删除前缀requestId
-     * @return requestid
-     */
-    public static String getRequestId(boolean removePrefix) {
-        return Optional.ofNullable(MDC.get(MDCLogInterceptor.REQUEST_ID))
-                .map(m -> removePrefix ? m.substring(10) : m)
-                .orElse(null);
+        return MDC.get(MDCLogInterceptor.REQUEST_ID);
     }
 
 }
