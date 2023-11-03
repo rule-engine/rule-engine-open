@@ -336,6 +336,13 @@ create table rule_engine_rule
     deleted           tinyint       null
 );
 
+create index rule_engine_rule_code_index
+    on rule_engine_rule (code);
+
+create index rule_engine_rule_name_index
+    on rule_engine_rule (name);
+
+
 INSERT INTO rule_engine_rule (id, name, code, description, create_user_id, create_user_name, action_value, action_type, action_value_type, create_time, update_time, deleted) VALUES (646, '测试', 'test', null, 1, 'admin', 'true', 2, 'BOOLEAN', '2023-08-11 12:29:46', '2023-08-11 12:29:46', 0);
 create table rule_engine_system_log
 (
@@ -481,5 +488,25 @@ CREATE TABLE `rule_engine_data_permission` (
                                                `create_time` timestamp NULL DEFAULT NULL,
                                                `update_time` timestamp NULL DEFAULT NULL,
                                                `deleted` tinyint(4) DEFAULT NULL,
-                                               PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户数据权限表';
+                                               PRIMARY KEY (`id`),
+                                               KEY `rule_engine_data_permission_data_type_data_id_index` (`data_type`,`data_id`),
+                                               KEY `rule_engine_data_permission_user_id_index` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户数据权限表';
+
+
+CREATE TABLE `rule_engine_formula` (
+                                       `id` int(11) NOT NULL AUTO_INCREMENT,
+                                       `name` varchar(50) NOT NULL COMMENT '名称',
+                                       `value` varchar(1000) DEFAULT NULL COMMENT '表达式值',
+                                       `value_type` varchar(10) DEFAULT NULL COMMENT '表达式值类型',
+                                       `workspace_id` int(11) DEFAULT NULL COMMENT '工作区id',
+                                       `description` varchar(500) DEFAULT NULL COMMENT '描述',
+                                       `reference_parameter_code` json DEFAULT NULL,
+                                       `data_type` int(11) DEFAULT NULL COMMENT '数据类型',
+                                       `data_id` int(11) DEFAULT NULL COMMENT '数据id',
+                                       `create_time` timestamp NULL DEFAULT NULL,
+                                       `update_time` timestamp NULL DEFAULT NULL,
+                                       `deleted` tinyint(4) DEFAULT NULL,
+                                       PRIMARY KEY (`id`),
+                                       KEY `rule_engine_formula_workspace_id_name_index` (`workspace_id`,`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
