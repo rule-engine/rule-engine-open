@@ -108,7 +108,7 @@ public class ValueResolveImpl implements ValueResolve {
     @Override
     public ConfigValue getConfigValue(Value cValue) {
         ConfigValue value = new ConfigValue();
-        value.setValueType(cValue.getValueType().getValue());
+        value.setValueType(cValue.getValueType().name());
         if (cValue instanceof Constant) {
             value.setType(VariableType.CONSTANT.getType());
             Constant constant = (Constant) cValue;

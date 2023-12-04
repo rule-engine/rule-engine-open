@@ -64,7 +64,7 @@ public class Executor implements Value {
             return null;
         }
         Class<?> classType = action.getClass();
-        if (!classType.isAssignableFrom(valueType.getClassType())) {
+        if (!valueType.getClassType().isAssignableFrom(classType)) {
             throw new ValueException("基础规则执行结果与配置结果类型不同：{}-{}", classType, valueType.getClassType());
         }
         return action;

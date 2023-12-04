@@ -31,69 +31,52 @@ import java.util.*;
  */
 @AllArgsConstructor
 public enum ValueType {
+
     /**
      * 数据类型
      */
-    STRING("字符串", "STRING", Arrays.asList(Operator.EQ, Operator.NE, Operator.CONTAIN, Operator.ENDS_WITH, Operator.STARTS_WITH)),
-    BOOLEAN("布尔", "BOOLEAN", Arrays.asList(Operator.EQ, Operator.NE)),
-    NUMBER("数值", "NUMBER", Arrays.asList(Operator.GT, Operator.LT, Operator.EQ, Operator.NE, Operator.GE, Operator.LE)),
+    STRING("字符串",
+            Arrays.asList(Operator.EQ, Operator.NE, Operator.CONTAIN, Operator.ENDS_WITH, Operator.STARTS_WITH),
+            String.class),
+    BOOLEAN("布尔",
+            Arrays.asList(Operator.EQ, Operator.NE),
+            Boolean.class),
+    NUMBER("数值",
+            Arrays.asList(Operator.GT, Operator.LT, Operator.EQ, Operator.NE, Operator.GE, Operator.LE),
+            Number.class),
     /**
      * =:两个集合内容相同
      */
-    COLLECTION("集合", "COLLECTION", Arrays.asList(Operator.EQ, Operator.IN, Operator.NOT_IN, Operator.CONTAIN, Operator.NOT_CONTAIN)),
+    COLLECTION("集合",
+            Arrays.asList(Operator.EQ, Operator.IN, Operator.NOT_IN, Operator.CONTAIN, Operator.NOT_CONTAIN),
+            Collection.class),
     /**
      * 应对网友需求编写增加日期类型
      */
-    DATE("日期", "DATE", Arrays.asList(Operator.GT, Operator.LT, Operator.EQ, Operator.NE, Operator.GE, Operator.LE)),
+    DATE("日期",
+            Arrays.asList(Operator.GT, Operator.LT, Operator.EQ, Operator.NE, Operator.GE, Operator.LE),
+            Date.class),
 
     /**
      * 还没发确定返回值为什么的场景
+     * <p>
+     * 变量选择函数时，标记下类型
      */
-    UNKNOWN("未知", "UNKNOWN", Collections.emptyList()),
+    UNKNOWN("未知",
+            Collections.emptyList(),
+            Object.class),
 
     ;
 
     @Getter
     private final String name;
     @Getter
-    private final String value;
-    @Getter
     private final List<Operator> symbol;
-
-    public Class<?> getClassType() {
-        switch (value) {
-            case "STRING":
-                return String.class;
-            case "BOOLEAN":
-                return Boolean.class;
-            case "NUMBER":
-                return Number.class;
-            case "COLLECTION":
-                return Collection.class;
-            case "DATE":
-                return Date.class;
-            default:
-                throw new IllegalStateException("Unexpected value: " + value);
-        }
-    }
+    @Getter
+    private final Class<?> classType;
 
     public static ValueType getByValue(String value) {
-        switch (value) {
-            case "STRING":
-                return STRING;
-            case "BOOLEAN":
-                return BOOLEAN;
-            case "NUMBER":
-                return NUMBER;
-            case "COLLECTION":
-                return COLLECTION;
-            case "DATE":
-                return DATE;
-            case "UNKNOWN":
-                return UNKNOWN;
-            default:
-                throw new IllegalStateException("Unexpected value: " + value);
-        }
+        return ValueType.valueOf(value);
     }
 
 }
