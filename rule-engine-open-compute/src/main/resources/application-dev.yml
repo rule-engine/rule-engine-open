@@ -1,8 +1,9 @@
 logging:
   config: classpath:logback-spring.xml
-  level.root: info
   file:
     path: logs/web
+  level:
+    root: info
 
 server:
   port: 8010
@@ -33,8 +34,8 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       # 初始化大小，最小，最大
       initialSize: 10
-      minIdle: 300
-      maxActive: 2000
+      minIdle: 100
+      maxActive: 300
       # 配置获取连接等待超时的时间
       maxWait: 10000
       # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
