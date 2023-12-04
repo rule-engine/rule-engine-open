@@ -1,6 +1,7 @@
 package cn.ruleengine.web.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.lang.Validator;
 import cn.ruleengine.common.vo.PageRequest;
 import cn.ruleengine.common.vo.PageResult;
@@ -32,6 +33,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -245,7 +247,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public String uploadAvatar(MultipartFile file) throws IOException {
-        return this.aliOssClient.upload(file.getInputStream(), file.getOriginalFilename());
+        String uuid = UUID.fastUUID().toString(true);
+        String fileName = uuid + file.getOriginalFilename();
+        // auto close
+        try (InputStream inputStream = file.getInputStream()) {
+            // upload
+            return this.aliOssClient.upload(inputStream, fileName);
+        }
     }
 
     /**

@@ -72,7 +72,7 @@ public class DataPermissionAspect {
         Object[] args = joinPoint.getArgs();
         //获取方法
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        Serializable id = SpelUtils.resolveProceedingJoinPointSpel(method, args, dataPermission.id(), Serializable.class);
+        Serializable id = SpelUtils.resolve(method, args, dataPermission.id(), Serializable.class);
         // 不影响后续逻辑
         if (id == null) {
             log.info("校验数据权限，当前Id为null，跳过");

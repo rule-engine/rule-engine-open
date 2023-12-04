@@ -27,14 +27,14 @@ public class SpelUtils {
     private static final LocalVariableTableParameterNameDiscoverer DISCOVERER = new LocalVariableTableParameterNameDiscoverer();
 
     /**
-     * resolveProceedingJoinPointSpel
+     * 解析执行的方法上的spel表达式
      *
      * @param method 方法
      * @param args   参数对象数组
      * @param spel   s
      * @return r
      */
-    public static <T> T resolveProceedingJoinPointSpel(Method method, Object[] args, String spel, Class<T> tClass) {
+    public static <T> T resolve(Method method, Object[] args, String spel, Class<T> tClass) {
         //获取方法参数名
         String[] params = DISCOVERER.getParameterNames(method);
         if (params == null || params.length == 0) {
