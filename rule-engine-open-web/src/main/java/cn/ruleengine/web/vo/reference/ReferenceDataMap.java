@@ -1,8 +1,6 @@
 package cn.ruleengine.web.vo.reference;
 
-
 import cn.hutool.core.collection.CollUtil;
-import cn.ruleengine.web.store.entity.RuleEngineFormula;
 import cn.ruleengine.web.store.entity.RuleEngineGeneralRule;
 import cn.ruleengine.web.store.entity.RuleEngineInputParameter;
 import cn.ruleengine.web.store.entity.RuleEngineVariable;
@@ -27,9 +25,6 @@ public class ReferenceDataMap {
 
     @Getter
     private final Map<Integer, RuleEngineInputParameter> inputParameterMap = new HashMap<>();
-
-    @Getter
-    private final Map<Integer, RuleEngineFormula> formulaMap = new HashMap<>();
 
     @Getter
     private final Map<Integer, RuleEngineVariable> variableMap = new HashMap<>();
@@ -70,16 +65,6 @@ public class ReferenceDataMap {
     }
 
     /**
-     * 根据id查询缓存中的表达式
-     *
-     * @param id 表达式id
-     * @return r
-     */
-    public RuleEngineFormula getFormulaById(Integer id) {
-        return formulaMap.get(id);
-    }
-
-    /**
      * 根据id查询缓存中的普通规则
      *
      * @param id 普通规则id
@@ -87,18 +72,6 @@ public class ReferenceDataMap {
      */
     public RuleEngineGeneralRule getGeneralRuleById(Integer id) {
         return generalRuleMap.get(id);
-    }
-
-    /**
-     * 添加表达式缓存
-     *
-     * @param list 表达式list
-     */
-    public void addRuleEngineFormula(List<RuleEngineFormula> list) {
-        if (CollUtil.isEmpty(list)) {
-            return;
-        }
-        this.formulaMap.putAll(list.stream().collect(Collectors.toMap(RuleEngineFormula::getId, Function.identity())));
     }
 
     /**

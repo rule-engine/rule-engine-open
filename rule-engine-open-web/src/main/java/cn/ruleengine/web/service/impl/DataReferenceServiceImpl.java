@@ -53,8 +53,6 @@ public class DataReferenceServiceImpl implements DataReferenceService {
     @Resource
     private RuleEngineVariableManager ruleEngineVariableManager;
     @Resource
-    private RuleEngineFormulaManager ruleEngineFormulaManager;
-    @Resource
     private RuleEngineGeneralRulePublishManager ruleEngineGeneralRulePublishManager;
 
     /**
@@ -276,12 +274,6 @@ public class DataReferenceServiceImpl implements DataReferenceService {
             List<RuleEngineInputParameter> list = this.ruleEngineInputParameterManager.lambdaQuery()
                     .in(RuleEngineInputParameter::getId, inputParameterIds).list();
             referenceDataMap.addRuleEngineInputParameter(list);
-        }
-        Set<Integer> formulaIds = referenceData.getFormulaIds();
-        if (CollUtil.isNotEmpty(formulaIds)) {
-            List<RuleEngineFormula> list = this.ruleEngineFormulaManager.lambdaQuery()
-                    .in(RuleEngineFormula::getId, inputParameterIds).list();
-            referenceDataMap.addRuleEngineFormula(list);
         }
         Set<Integer> variableIds = referenceData.getVariableIds();
         if (CollUtil.isNotEmpty(variableIds)) {

@@ -1,8 +1,6 @@
 package cn.ruleengine.web.vo.permission.data;
 
-import cn.ruleengine.web.vo.common.DataTypeAndId;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,9 +11,16 @@ import javax.validation.constraints.NotNull;
  * @version 1.0
  * @since 2021/6/26 4:11 下午
  **/
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class UpdateDataPermissionRequest extends DataTypeAndId {
+public class UpdateDataPermissionRequest {
+
+    private Integer dataType;
+
+    /**
+     * 数据库id
+     * 如果data_type=0 则此data_id为规则的id
+     */
+    private Integer dataId;
 
     /**
      * 0有写权限

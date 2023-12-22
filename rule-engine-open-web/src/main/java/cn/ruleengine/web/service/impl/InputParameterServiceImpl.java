@@ -17,7 +17,6 @@ import cn.ruleengine.web.store.entity.RuleEngineInputParameter;
 import cn.ruleengine.web.store.entity.RuleEngineVariable;
 import cn.ruleengine.web.store.manager.RuleEngineInputParameterManager;
 import cn.ruleengine.web.store.manager.RuleEngineVariableManager;
-import cn.ruleengine.web.store.mapper.RuleEngineFormulaMapper;
 import cn.ruleengine.web.util.OrikaBeanMapper;
 import cn.ruleengine.web.util.PageUtils;
 import cn.ruleengine.web.vo.parameter.*;
@@ -46,8 +45,6 @@ public class InputParameterServiceImpl implements InputParameterService {
     private RuleEngineInputParameterManager ruleEngineInputParameterManager;
     @Resource
     private DataReferenceService dataReferenceService;
-    @Resource
-    private RuleEngineFormulaMapper ruleEngineFormulaMapper;
     @Resource
     private RuleEngineVariableManager ruleEngineVariableManager;
 

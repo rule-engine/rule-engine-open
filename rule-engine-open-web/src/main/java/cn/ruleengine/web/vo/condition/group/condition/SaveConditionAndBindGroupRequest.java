@@ -1,9 +1,7 @@
 package cn.ruleengine.web.vo.condition.group.condition;
 
-import cn.ruleengine.web.vo.common.DataTypeAndId;
 import cn.ruleengine.web.vo.condition.AddConditionRequest;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -15,9 +13,8 @@ import javax.validation.constraints.NotNull;
  * @date 2021/7/12 1:42 下午
  * @since 1.0.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SaveConditionAndBindGroupRequest extends DataTypeAndId {
+public class SaveConditionAndBindGroupRequest {
 
     /**
      * 与addConditionRequest绑定

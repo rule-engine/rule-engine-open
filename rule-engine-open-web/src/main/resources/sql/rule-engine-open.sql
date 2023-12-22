@@ -264,20 +264,8 @@ create index rule_engine_rule_publish_rule_id_index
 
 INSERT INTO rule_engine_general_rule_publish (id, general_rule_id, general_rule_code, general_rule_name, workspace_id, workspace_code, data, status, version, loading_mode, value_type, create_time, update_time, deleted) VALUES (1513, 214, 'test', '测试', 2, 'test', '{"cn.ruleengine.core.rule.GeneralRule": {"id": 214, "code": "test", "name": "测试", "rule": {"cn.ruleengine.core.rule.Rule": {"id": null, "code": null, "name": null, "actionValue": {"cn.ruleengine.core.value.Constant": {"value": true, "valueType": {"cn.ruleengine.core.value.ValueType": "BOOLEAN"}}}, "description": null, "conditionSet": {"cn.ruleengine.core.condition.ConditionSet": {"conditionGroups": {"java.util.Collections$UnmodifiableRandomAccessList": [{"cn.ruleengine.core.condition.ConditionGroup": {"id": 2028, "name": "条件组", "orderNo": 1, "conditions": {"java.util.Collections$UnmodifiableRandomAccessList": [{"cn.ruleengine.core.condition.Condition": {"id": 149, "name": "测试条件", "orderNo": 0, "operator": {"cn.ruleengine.core.condition.Operator": "EQ"}, "leftValue": {"cn.ruleengine.core.value.InputParameter": {"valueType": {"cn.ruleengine.core.value.ValueType": "STRING"}, "inputParameterId": 166, "inputParameterCode": "name"}}, "rightValue": {"cn.ruleengine.core.value.Constant": {"value": "123", "valueType": {"cn.ruleengine.core.value.ValueType": "STRING"}}}}}]}}}]}}}}}, "version": "1.0", "description": null, "workspaceId": 2, "workspaceCode": "test", "defaultActionValue": null}}', 2, '1.0', 1, 'BOOLEAN', '2023-08-11 12:37:25', '2023-08-11 12:37:25', 0);
 INSERT INTO rule_engine_general_rule_publish (id, general_rule_id, general_rule_code, general_rule_name, workspace_id, workspace_code, data, status, version, loading_mode, value_type, create_time, update_time, deleted) VALUES (1514, 214, 'test', '测试', 2, 'test', '{"cn.ruleengine.core.rule.GeneralRule": {"id": 214, "code": "test", "name": "测试", "rule": {"cn.ruleengine.core.rule.Rule": {"id": null, "code": null, "name": null, "actionValue": {"cn.ruleengine.core.value.Constant": {"value": true, "valueType": {"cn.ruleengine.core.value.ValueType": "BOOLEAN"}}}, "description": null, "conditionSet": {"cn.ruleengine.core.condition.ConditionSet": {"conditionGroups": {"java.util.Collections$UnmodifiableRandomAccessList": [{"cn.ruleengine.core.condition.ConditionGroup": {"id": 2028, "name": "条件组", "orderNo": 1, "conditions": {"java.util.Collections$UnmodifiableRandomAccessList": [{"cn.ruleengine.core.condition.Condition": {"id": 149, "name": "测试条件", "orderNo": 0, "operator": {"cn.ruleengine.core.condition.Operator": "EQ"}, "leftValue": {"cn.ruleengine.core.value.InputParameter": {"valueType": {"cn.ruleengine.core.value.ValueType": "STRING"}, "inputParameterId": 166, "inputParameterCode": "name"}}, "rightValue": {"cn.ruleengine.core.value.Constant": {"value": "123", "valueType": {"cn.ruleengine.core.value.ValueType": "STRING"}}}}}, {"cn.ruleengine.core.condition.Condition": {"id": 150, "name": "测试2", "orderNo": 1, "operator": {"cn.ruleengine.core.condition.Operator": "EQ"}, "leftValue": {"cn.ruleengine.core.value.Variable": {"valueType": {"cn.ruleengine.core.value.ValueType": "BOOLEAN"}, "variableId": 165}}, "rightValue": {"cn.ruleengine.core.value.Constant": {"value": true, "valueType": {"cn.ruleengine.core.value.ValueType": "BOOLEAN"}}}}}]}}}]}}}}}, "version": "2.0", "description": null, "workspaceId": 2, "workspaceCode": "test", "defaultActionValue": null}}', 1, '2.0', 1, 'BOOLEAN', '2023-08-11 12:38:36', '2023-08-11 12:38:36', 0);
-create table rule_engine_group_data
-(
-    id          int auto_increment
-        primary key,
-    group_id    int       not null,
-    data_id     int       not null,
-    data_type   tinyint   not null,
-    create_time timestamp null,
-    update_time timestamp null,
-    deleted     tinyint   null
-)
-    comment '规则用户组与数据权限';
 
-INSERT INTO rule_engine_group_data (id, group_id, data_id, data_type, create_time, update_time, deleted) VALUES (1, 1, 1, 0, '2020-11-21 02:42:01', '2020-11-21 02:42:03', 0);
+
 create table rule_engine_input_parameter
 (
     id               int auto_increment
@@ -492,21 +480,3 @@ CREATE TABLE `rule_engine_data_permission` (
                                                KEY `rule_engine_data_permission_data_type_data_id_index` (`data_type`,`data_id`),
                                                KEY `rule_engine_data_permission_user_id_index` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户数据权限表';
-
-
-CREATE TABLE `rule_engine_formula` (
-                                       `id` int(11) NOT NULL AUTO_INCREMENT,
-                                       `name` varchar(50) NOT NULL COMMENT '名称',
-                                       `value` varchar(1000) DEFAULT NULL COMMENT '表达式值',
-                                       `value_type` varchar(10) DEFAULT NULL COMMENT '表达式值类型',
-                                       `workspace_id` int(11) DEFAULT NULL COMMENT '工作区id',
-                                       `description` varchar(500) DEFAULT NULL COMMENT '描述',
-                                       `reference_parameter_code` json DEFAULT NULL,
-                                       `data_type` int(11) DEFAULT NULL COMMENT '数据类型',
-                                       `data_id` int(11) DEFAULT NULL COMMENT '数据id',
-                                       `create_time` timestamp NULL DEFAULT NULL,
-                                       `update_time` timestamp NULL DEFAULT NULL,
-                                       `deleted` tinyint(4) DEFAULT NULL,
-                                       PRIMARY KEY (`id`),
-                                       KEY `rule_engine_formula_workspace_id_name_index` (`workspace_id`,`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
