@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -112,6 +113,8 @@ public class RateLimitAspect {
         if (!rateLimiter.isExists()) {
             boolean trySetRate = rateLimiter.trySetRate(RateType.OVERALL, limit, refreshInterval, rateIntervalUnit);
             log.info("初始化RateLimiter的状态:{}", trySetRate);
+            // 限流数据保存10天
+            rateLimiter.expire(10, TimeUnit.DAYS);
         }
         if (!rateLimiter.tryAcquire()) {
             throw new ValidationException("你访问过于频繁,请稍后重试!");

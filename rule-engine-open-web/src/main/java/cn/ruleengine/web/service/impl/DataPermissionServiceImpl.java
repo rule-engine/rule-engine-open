@@ -13,8 +13,11 @@ import cn.ruleengine.web.service.WorkspaceService;
 import cn.ruleengine.web.store.entity.RuleEngineDataPermission;
 import cn.ruleengine.web.store.entity.RuleEngineGeneralRule;
 import cn.ruleengine.web.store.entity.RuleEngineInputParameter;
-import cn.ruleengine.web.store.manager.*;
-import cn.ruleengine.web.store.mapper.RuleEngineDataPermissionMapper;
+import cn.ruleengine.web.store.entity.RuleEngineVariable;
+import cn.ruleengine.web.store.manager.RuleEngineDataPermissionManager;
+import cn.ruleengine.web.store.manager.RuleEngineGeneralRuleManager;
+import cn.ruleengine.web.store.manager.RuleEngineInputParameterManager;
+import cn.ruleengine.web.store.manager.RuleEngineVariableManager;
 import cn.ruleengine.web.store.mapper.RuleEngineUserWorkspaceMapper;
 import cn.ruleengine.web.vo.permission.data.ListDataPermissionRequest;
 import cn.ruleengine.web.vo.permission.data.ListDataPermissionResponse;
@@ -46,8 +49,6 @@ import java.util.stream.Stream;
 public class DataPermissionServiceImpl implements DataPermissionService {
 
     @Resource
-    private RuleEngineConditionManager ruleEngineConditionManager;
-    @Resource
     private RuleEngineInputParameterManager ruleEngineInputParameterManager;
     @Resource
     private RuleEngineVariableManager ruleEngineVariableManager;
@@ -57,8 +58,6 @@ public class DataPermissionServiceImpl implements DataPermissionService {
     private RuleEngineDataPermissionManager ruleEngineDataAuthorityManager;
     @Resource
     private RuleEngineUserWorkspaceMapper ruleEngineUserWorkspaceMapper;
-    @Resource
-    private RuleEngineDataPermissionMapper ruleEngineDataPermissionMapper;
     @Resource
     private RuleEngineDataPermissionManager ruleEngineDataPermissionManager;
     @Resource
@@ -126,6 +125,20 @@ public class DataPermissionServiceImpl implements DataPermissionService {
         switch (dataPermissionType) {
             case FUNCTION:
                 break;
+            case VARIABLE:
+                RuleEngineVariable ruleEngineVariable = this.ruleEngineVariableManager.getById(dataId);
+                if (ruleEngineVariable == null) {
+                    return true;
+                }
+                // 参数只有管理与自己能修改
+                if (Objects.equals(ruleEngineVariable.getCreateUserId(), userId)) {
+                    return true;
+                }
+                // 别人是否有这个数据的工作空间权限
+                if (!this.workspaceService.hasWorkspacePermission(userId, ruleEngineVariable.getWorkspaceId())) {
+                    return false;
+                }
+                return this.permissionTypeProcess(operationType);
             case GENERAL_RULE:
                 RuleEngineGeneralRule ruleEngineGeneralRule = this.ruleEngineGeneralRuleManager.getById(dataId);
                 // 不影响后续逻辑
