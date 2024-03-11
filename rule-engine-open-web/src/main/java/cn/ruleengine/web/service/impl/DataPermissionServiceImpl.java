@@ -130,7 +130,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
                 if (ruleEngineVariable == null) {
                     return true;
                 }
-                // 参数只有管理与自己能修改
+                // 只有管理与自己能修改
                 if (Objects.equals(ruleEngineVariable.getCreateUserId(), userId)) {
                     return true;
                 }
