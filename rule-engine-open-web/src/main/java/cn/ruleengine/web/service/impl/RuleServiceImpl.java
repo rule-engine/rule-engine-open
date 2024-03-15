@@ -1,6 +1,7 @@
 package cn.ruleengine.web.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.ruleengine.web.config.Context;
 import cn.ruleengine.web.enums.ErrorCodeEnum;
 import cn.ruleengine.web.exception.ApiException;
 import cn.ruleengine.web.service.ConditionGroupService;
@@ -73,6 +74,11 @@ public class RuleServiceImpl implements RuleService {
             ruleEngineRule.setActionType(action.getType());
             ruleEngineRule.setActionValueType(action.getValueType());
             ruleEngineRule.setActionValue(action.getValue());
+        }
+        if (ruleBody.getId() == null) {
+            UserData user = Context.getUser();
+            ruleEngineRule.setCreateUserId(user.getId());
+            ruleEngineRule.setCreateUserName(user.getUsername());
         }
         this.ruleEngineRuleManager.saveOrUpdate(ruleEngineRule);
         List<ConditionGroupConfig> conditionGroup = ruleBody.getConditionGroup();
