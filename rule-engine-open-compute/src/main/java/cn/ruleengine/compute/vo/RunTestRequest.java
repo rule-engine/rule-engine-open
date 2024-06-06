@@ -2,6 +2,7 @@ package cn.ruleengine.compute.vo;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
@@ -24,11 +25,8 @@ public class RunTestRequest {
     @NotNull
     private Integer id;
 
-    /**
-     * DataStatus
-     */
-    @NotNull
-    private Integer status;
+    @NotBlank
+    private String version;
 
     @NotEmpty
     private String workspaceCode;

@@ -1,6 +1,5 @@
 package cn.ruleengine.compute.service.impl;
 
-import cn.ruleengine.compute.enums.DataStatus;
 import cn.ruleengine.compute.service.RunTestService;
 import cn.ruleengine.compute.store.entity.RuleEngineGeneralRulePublish;
 import cn.ruleengine.compute.store.manager.RuleEngineGeneralRulePublishManager;
@@ -42,20 +41,12 @@ public class GeneralRuleRunTestServiceImpl implements RunTestService {
     public Object run(RunTestRequest runTestRequest) {
         log.info("模拟运行规则：{}", runTestRequest.getCode());
         RuleEngineGeneralRulePublish rulePublish = this.ruleEngineGeneralRulePublishManager.lambdaQuery()
-                .eq(RuleEngineGeneralRulePublish::getStatus, runTestRequest.getStatus())
+                .eq(RuleEngineGeneralRulePublish::getVersion, runTestRequest.getVersion())
                 .eq(RuleEngineGeneralRulePublish::getGeneralRuleCode, runTestRequest.getCode())
                 .eq(RuleEngineGeneralRulePublish::getWorkspaceCode, runTestRequest.getWorkspaceCode())
                 .one();
         if (rulePublish == null) {
-            // 如果测试找不到，用线上  此场景出现在只有一个线上的时候
-            rulePublish = this.ruleEngineGeneralRulePublishManager.lambdaQuery()
-                    .eq(RuleEngineGeneralRulePublish::getStatus, DataStatus.PRD.getStatus())
-                    .eq(RuleEngineGeneralRulePublish::getGeneralRuleCode, runTestRequest.getCode())
-                    .eq(RuleEngineGeneralRulePublish::getWorkspaceCode, runTestRequest.getWorkspaceCode())
-                    .one();
-            if (rulePublish == null) {
-                throw new ValidException("找不到可运行的规则数据:{},{},{}", runTestRequest.getWorkspaceCode(), runTestRequest.getCode(), runTestRequest.getStatus());
-            }
+            throw new ValidException("找不到可运行的规则数据:{},{},{}", runTestRequest.getWorkspaceCode(), runTestRequest.getCode(), runTestRequest.getVersion());
         }
         Input input = new DefaultInput(runTestRequest.getParam());
         log.info("初始化规则引擎");
