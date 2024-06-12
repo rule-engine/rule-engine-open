@@ -13,6 +13,7 @@ import cn.ruleengine.web.vo.condition.ConditionGroupConfig;
 import cn.ruleengine.web.vo.condition.ConfigValue;
 import cn.ruleengine.web.vo.rule.general.SaveActionRequest;
 import cn.ruleengine.web.vo.rule.RuleBody;
+import cn.ruleengine.web.vo.user.UserData;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -76,7 +77,7 @@ public class RuleServiceImpl implements RuleService {
             ruleEngineRule.setActionValue(action.getValue());
         }
         if (ruleBody.getId() == null) {
-            UserData user = Context.getUser();
+            UserData user = Context.getCurrentUser();
             ruleEngineRule.setCreateUserId(user.getId());
             ruleEngineRule.setCreateUserName(user.getUsername());
         }
