@@ -101,7 +101,7 @@ public class UserController {
      */
     @NoAuth
     @SystemLog(tag = "用户登录")
-    @RateLimit(limit = 3)
+    @RateLimit(limit = 6)
     @PostMapping("login")
     @ApiOperation("用户登录")
     public PlainResult<Boolean> login(@Valid @RequestBody LoginRequest loginRequest) {

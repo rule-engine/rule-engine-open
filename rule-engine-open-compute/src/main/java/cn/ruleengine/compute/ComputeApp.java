@@ -1,5 +1,6 @@
 package cn.ruleengine.compute;
 
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +22,7 @@ import org.springframework.web.filter.CorsFilter;
  * @date 2021/6/17 8:35 下午
  * @since 1.0.0
  */
+@Slf4j
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,
         SecurityAutoConfiguration.class,
@@ -34,7 +36,7 @@ public class ComputeApp {
     public static void main(String[] args) {
         SpringApplication.run(ComputeApp.class, args);
         // logo
-        System.out.println("__________               __     __________      .__          \n" +
+        log.info("\n__________               __     __________      .__          \n" +
                 "\\______   \\ ____   _____/  |_   \\______   \\__ __|  |   ____  \n" +
                 " |    |  _//  _ \\ /  _ \\   __\\   |       _/  |  \\  | _/ __ \\ \n" +
                 " |    |   (  <_> |  <_> )  |     |    |   \\  |  /  |_\\  ___/ \n" +
