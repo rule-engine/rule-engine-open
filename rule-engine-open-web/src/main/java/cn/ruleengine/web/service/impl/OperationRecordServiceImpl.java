@@ -68,10 +68,13 @@ public class OperationRecordServiceImpl implements OperationRecordService {
      */
     @Override
     public PageResult<OperationRecordResponse> operationRecord(PageRequest<OperationRecordRequest> recordRequestPageRequest) {
+        Workspace currentWorkspace = Context.getCurrentWorkspace();
         PageBase page = recordRequestPageRequest.getPage();
         List<PageRequest.OrderBy> orders = recordRequestPageRequest.getOrders();
 
         QueryWrapper<RuleEngineOperationRecord> queryWrapper = new QueryWrapper<>();
+        // 只查询当前工作空间的数据
+        queryWrapper.lambda().eq(RuleEngineOperationRecord::getWorkspaceCode, currentWorkspace.getCode());
         PageUtils.defaultOrder(orders, queryWrapper, RuleEngineOperationRecord::getOperationTime);
         Page<RuleEngineOperationRecord> recordPage = ruleEngineOperationRecordManager.page(new Page<>(page.getPageIndex(), page.getPageSize()), queryWrapper);
         List<RuleEngineOperationRecord> records = recordPage.getRecords();
