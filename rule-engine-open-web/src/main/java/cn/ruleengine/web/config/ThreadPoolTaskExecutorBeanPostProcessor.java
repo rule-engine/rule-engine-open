@@ -1,5 +1,7 @@
-package cn.ruleengine.compute.config;
+package cn.ruleengine.web.config;
 
+import cn.ruleengine.web.vo.user.UserData;
+import cn.ruleengine.web.vo.workspace.Workspace;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -54,15 +56,24 @@ public class ThreadPoolTaskExecutorBeanPostProcessor implements BeanPostProcesso
         @Override
         public Runnable decorate(@NonNull Runnable runnable) {
             Map<String, String> context = MDC.getCopyOfContextMap();
+            UserData userData = Context.getCurrentUser();
+            Workspace workspace = Context.getCurrentWorkspace();
             Runnable finalRunnable = Objects.nonNull(delegate) ? delegate.decorate(runnable) : runnable;
             return () -> {
                 try {
                     if (context != null) {
                         MDC.setContextMap(context);
                     }
+                    if (userData != null) {
+                        Context.setCurrentUser(userData);
+                    }
+                    if (workspace != null) {
+                        Context.setCurrentWorkspace(workspace);
+                    }
                     finalRunnable.run();
                 } finally {
                     MDC.clear();
+                    Context.clearAll();
                 }
             };
         }

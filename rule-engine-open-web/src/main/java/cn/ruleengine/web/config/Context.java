@@ -83,6 +83,10 @@ public class Context implements ApplicationContextAware {
         return workspace;
     }
 
+    public static void setCurrentWorkspace(Workspace workspace) {
+        Context.WORKSPACE.set(workspace);
+    }
+
     /**
      * 当前登陆用户是否为当前工作空间管理员
      *
@@ -129,7 +133,7 @@ public class Context implements ApplicationContextAware {
     /**
      * 清楚所有ThreadLocal上下文数据
      */
-    public static void clearAllThreadLocal() {
+    public static void clearAll() {
         WORKSPACE.remove();
         USER.remove();
         IS_WORKSPACE_ADMINISTRATOR.remove();

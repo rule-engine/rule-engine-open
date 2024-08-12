@@ -151,7 +151,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception exception) {
-        Context.clearAllThreadLocal();
+        Context.clearAll();
     }
 
     /**
