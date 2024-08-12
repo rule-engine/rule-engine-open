@@ -260,13 +260,14 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             throw new ApiException(ErrorCodeEnum.RULE9999404.getCode(), "找不到此工作空间：" + id);
         }
         UserData userData = Context.getCurrentUser();
+        boolean isWorkspaceAdministrator = true;
         if (!userData.getIsAdmin()) {
             // 如果不是超级管理员，查看是否有此工作空间的工作空间权限
             if (!this.hasWorkspacePermission(id, userData.getId())) {
                 throw new ApiException("你没有此工作空间权限");
             }
+            isWorkspaceAdministrator = this.isWorkspaceAdministrator(userData.getId(), id);
         }
-        boolean isWorkspaceAdministrator = this.isWorkspaceAdministrator(userData.getId(), id);
         RBucket<Workspace> bucket = this.redissonClient.getBucket(CURRENT_WORKSPACE + userData.getId());
         Workspace workspace = new Workspace();
         workspace.setId(engineWorkspace.getId());
