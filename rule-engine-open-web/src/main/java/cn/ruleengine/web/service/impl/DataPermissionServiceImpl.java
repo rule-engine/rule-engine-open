@@ -101,7 +101,7 @@ public class DataPermissionServiceImpl implements DataPermissionService {
             return true;
         }
         // 如果是工作空间管理员
-        if (Context.currentIsWorkspaceAdministrator()) {
+        if (Context.getCurrentWorkspace().isAdministration()) {
             return true;
         }
         return this.doValidDataPermission(dataId, userId, dataType, dataPermissionType, operationType);

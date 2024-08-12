@@ -23,4 +23,9 @@ public class Workspace implements Serializable {
 
     private String code;
 
+    /**
+     * 当前登陆用户是否为工作空间管理
+     */
+    private boolean isAdministration;
+
 }

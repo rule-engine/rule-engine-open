@@ -20,7 +20,7 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import cn.ruleengine.web.annotation.SystemLog;
 import cn.ruleengine.web.config.Context;
-import cn.ruleengine.web.interceptor.MDCLogInterceptor;
+import cn.ruleengine.web.interceptor.TraceInterceptor;
 import cn.ruleengine.web.listener.event.SystemLogEvent;
 import cn.ruleengine.web.store.entity.RuleEngineSystemLog;
 import cn.ruleengine.web.util.HttpServletUtils;
@@ -88,7 +88,7 @@ public class SystemLogAspect {
         //请求url
         log.setRequestUrl(request.getRequestURL().toString());
         // 过滤掉requestId:
-        log.setRequestId(MDCLogInterceptor.getRequestId());
+        log.setRequestId(TraceInterceptor.getRequestId());
         try {
             //执行被代理类方法
             Object proceed = joinPoint.proceed();

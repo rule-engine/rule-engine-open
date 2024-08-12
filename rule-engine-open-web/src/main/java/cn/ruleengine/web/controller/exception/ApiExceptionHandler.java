@@ -10,7 +10,7 @@ import cn.ruleengine.web.exception.ApiException;
 import cn.ruleengine.web.exception.DataPermissionException;
 import cn.ruleengine.web.exception.LoginException;
 import cn.ruleengine.web.exception.ReSubmitException;
-import cn.ruleengine.web.interceptor.MDCLogInterceptor;
+import cn.ruleengine.web.interceptor.TraceInterceptor;
 import jodd.util.StringPool;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class ApiExceptionHandler {
         BaseResult result = BaseResult.err();
         log.error("Exception", e);
         // 抛出的未知异常 加上RequestId
-        result.setMessage(ErrorCodeEnum.RULE500.getMsg().concat(StringPool.AT).concat(MDCLogInterceptor.getRequestId()));
+        result.setMessage(ErrorCodeEnum.RULE500.getMsg().concat(StringPool.AT).concat(TraceInterceptor.getRequestId()));
         result.setCode(ErrorCodeEnum.RULE500.getCode());
         return result;
     }
@@ -159,7 +159,7 @@ public class ApiExceptionHandler {
      */
     @ExceptionHandler(value = ValidationException.class)
     public BaseResult validationException(ValidationException e) {
-        log.warn("ValidationException", e);
+        log.warn("ValidationException:" + e.getMessage());
         BaseResult result = BaseResult.err();
         result.setMessage(e.getMessage());
         result.setCode(ErrorCodeEnum.RULE99990100.getCode());

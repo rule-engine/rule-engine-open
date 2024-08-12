@@ -13,9 +13,11 @@ import cn.ruleengine.web.store.manager.RuleEngineUserManager;
 import cn.ruleengine.web.store.manager.RuleEngineUserWorkspaceManager;
 import cn.ruleengine.web.store.mapper.RuleEngineUserWorkspaceMapper;
 import cn.ruleengine.web.util.PageUtils;
+import cn.ruleengine.web.vo.workspace.Workspace;
 import cn.ruleengine.web.vo.workspace.member.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
@@ -156,11 +158,29 @@ public class WorkspaceMemberServiceImpl implements WorkspaceMemberService {
         Integer type = permissionTransferRequest.getType();
         Integer workspaceId = permissionTransferRequest.getWorkspaceId();
         Integer userId = permissionTransferRequest.getUserId();
-        return ruleEngineUserWorkspaceManager.lambdaUpdate()
+        boolean update = this.ruleEngineUserWorkspaceManager.lambdaUpdate()
                 .set(RuleEngineUserWorkspace::getIsAdministration, type)
                 .eq(RuleEngineUserWorkspace::getUserId, userId)
                 .eq(RuleEngineUserWorkspace::getWorkspaceId, workspaceId)
                 .update();
+        if (update) {
+            // 如果设置为管理员
+            RBucket<Workspace> bucket = this.redissonClient.getBucket(WorkspaceService.CURRENT_WORKSPACE + userId);
+            Workspace workspace = bucket.get();
+            if (UserType.WORKSPACE_ADMINISTRATOR.getType().equals(type)) {
+                if (workspace != null) {
+                    // 给当前用户更新
+                    workspace.setAdministration(true);
+                    bucket.set(workspace);
+                }
+            } else if (UserType.GENERAL_USER.getType().equals(type)) {
+                if (workspace != null) {
+                    workspace.setAdministration(false);
+                    bucket.set(workspace);
+                }
+            }
+        }
+        return update;
     }
 
 }

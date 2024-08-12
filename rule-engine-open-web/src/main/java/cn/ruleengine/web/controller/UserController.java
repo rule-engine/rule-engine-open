@@ -58,7 +58,7 @@ public class UserController {
      * @return true表示注册成功
      */
     @ReSubmitLock
-    @NoAuth
+    @NoLogin
     @PostMapping("register")
     @ApiOperation("用户注册")
     public PlainResult<Boolean> register(@RequestBody @Valid RegisterRequest registerRequest) {
@@ -99,7 +99,7 @@ public class UserController {
      * @param loginRequest 登录信息
      * @return true表示登录成功
      */
-    @NoAuth
+    @NoLogin
     @SystemLog(tag = "用户登录")
     @RateLimit(limit = 6)
     @PostMapping("login")
@@ -129,7 +129,7 @@ public class UserController {
      * @param verifyCodeByEmailRequest 邮箱/类型:注册,忘记密码
      * @return BaseResult
      */
-    @NoAuth
+    @NoLogin
     @RateLimit(type = RateLimitEnum.URL_IP)
     @PostMapping("verifyCodeByEmail")
     @ApiOperation("根据邮箱获取验证码!")

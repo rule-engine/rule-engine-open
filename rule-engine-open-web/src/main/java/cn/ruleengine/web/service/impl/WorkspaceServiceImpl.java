@@ -266,11 +266,13 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                 throw new ApiException("你没有此工作空间权限");
             }
         }
+        boolean isWorkspaceAdministrator = this.isWorkspaceAdministrator(userData.getId(), id);
         RBucket<Workspace> bucket = this.redissonClient.getBucket(CURRENT_WORKSPACE + userData.getId());
         Workspace workspace = new Workspace();
         workspace.setId(engineWorkspace.getId());
         workspace.setName(engineWorkspace.getName());
         workspace.setCode(engineWorkspace.getCode());
+        workspace.setAdministration(isWorkspaceAdministrator);
         bucket.set(workspace);
         return true;
     }
@@ -383,22 +385,47 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     /**
+     * 获取一个有权限的工作空间
+     *
+     * @return RuleEngineWorkspace
+     */
+    @Override
+    public Workspace getFirstWorkspace(Integer userId, boolean isAdmin) {
+        RuleEngineWorkspace ruleEngineWorkspace;
+        if (isAdmin) {
+            ruleEngineWorkspace = this.ruleEngineWorkspaceMapper.getFirstWorkspace();
+        } else {
+            // 获取用户有权限的工作空间
+            ruleEngineWorkspace = this.ruleEngineWorkspaceMapper.getFirstHasPermissionWorkspace(userId);
+        }
+        if (ruleEngineWorkspace == null) {
+            // 没有可用工作空间
+            throw new ApiException(ErrorCodeEnum.RULE_4010);
+        }
+        Workspace workspace = new Workspace();
+        workspace.setId(ruleEngineWorkspace.getId());
+        workspace.setName(ruleEngineWorkspace.getName());
+        workspace.setCode(ruleEngineWorkspace.getCode());
+        return workspace;
+    }
+
+    /**
      * 异步删除工作空间下的数据
      *
      * @param id 工作空间id
      */
     @Async
+    @Transactional(rollbackFor = Exception.class)
     public void syncDeleteWorkspaceData(Integer id) {
         // 普通规则
+        log.info("开始删除工作空间下普通规则数据！");
         List<RuleEngineGeneralRule> ruleEngineGeneralRules = this.ruleEngineGeneralRuleManager.lambdaQuery()
                 .eq(RuleEngineGeneralRule::getWorkspaceId, id)
                 .list();
-        // 暂时先循环调用删除
         for (RuleEngineGeneralRule ruleEngineGeneralRule : ruleEngineGeneralRules) {
             this.generalRuleService.delete(ruleEngineGeneralRule.getId());
         }
-        // TODO: 2021/6/24 规则集合
-        // TODO: 2021/6/24 决策表
+        log.info("数据删除完毕！");
     }
 
 }

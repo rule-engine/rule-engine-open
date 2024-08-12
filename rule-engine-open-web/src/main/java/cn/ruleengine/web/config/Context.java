@@ -1,7 +1,6 @@
 package cn.ruleengine.web.config;
 
 import cn.hutool.core.util.ArrayUtil;
-import cn.ruleengine.web.service.WorkspaceService;
 import cn.ruleengine.web.vo.user.UserData;
 import cn.ruleengine.web.vo.workspace.Workspace;
 import lombok.extern.slf4j.Slf4j;
@@ -32,15 +31,11 @@ public class Context implements ApplicationContextAware {
     /**
      * 本次请求的工作空间信息
      */
-    private static final ThreadLocal<Workspace> WORKSPACE = new InheritableThreadLocal<>();
+    private static final ThreadLocal<Workspace> WORKSPACE = new ThreadLocal<>();
     /**
      * 本次请求的用户信息
      */
-    private static final ThreadLocal<UserData> USER = new InheritableThreadLocal<>();
-    /**
-     * 当前登陆用户是否为工作空间管理
-     */
-    private static final ThreadLocal<Boolean> IS_WORKSPACE_ADMINISTRATOR = new InheritableThreadLocal<>();
+    private static final ThreadLocal<UserData> USER = new ThreadLocal<>();
 
 
     private static ApplicationContext applicationContext;
@@ -73,43 +68,13 @@ public class Context implements ApplicationContextAware {
      * @return Workspace
      */
     public static Workspace getCurrentWorkspace() {
-        Workspace workspace = Context.WORKSPACE.get();
-        if (workspace != null) {
-            return workspace;
-        }
-        WorkspaceService workspaceService = Context.applicationContext.getBean(WorkspaceService.class);
-        workspace = workspaceService.currentWorkspace();
-        Context.WORKSPACE.set(workspace);
-        return workspace;
+        return Context.WORKSPACE.get();
     }
 
     public static void setCurrentWorkspace(Workspace workspace) {
         Context.WORKSPACE.set(workspace);
     }
 
-    /**
-     * 当前登陆用户是否为当前工作空间管理员
-     *
-     * @return true 是
-     */
-    public static Boolean currentIsWorkspaceAdministrator() {
-        Boolean isWorkspaceAdministrator = Context.IS_WORKSPACE_ADMINISTRATOR.get();
-        if (isWorkspaceAdministrator != null) {
-            return isWorkspaceAdministrator;
-        }
-        WorkspaceService workspaceService = Context.applicationContext.getBean(WorkspaceService.class);
-        UserData currentUser = Context.getCurrentUser();
-        // 如果是超级管理，也认为是工作空间管理
-        if (currentUser.getIsAdmin()) {
-            Context.IS_WORKSPACE_ADMINISTRATOR.set(true);
-            return true;
-        }
-        Integer userId = currentUser.getId();
-        Integer workspaceId = Context.getCurrentWorkspace().getId();
-        isWorkspaceAdministrator = workspaceService.isWorkspaceAdministrator(userId, workspaceId);
-        Context.IS_WORKSPACE_ADMINISTRATOR.set(isWorkspaceAdministrator);
-        return isWorkspaceAdministrator;
-    }
 
     /**
      * 获取当前的环境配置，无配置返回null
@@ -136,7 +101,6 @@ public class Context implements ApplicationContextAware {
     public static void clearAll() {
         WORKSPACE.remove();
         USER.remove();
-        IS_WORKSPACE_ADMINISTRATOR.remove();
     }
 
 }

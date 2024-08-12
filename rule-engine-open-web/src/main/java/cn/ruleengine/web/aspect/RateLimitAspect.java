@@ -55,8 +55,10 @@ public class RateLimitAspect {
 
     /**
      * 限流key前缀,防止与其他redis key重复
+     * <p>
+     * rule-engine:rate-limit:{ip}:value
      */
-    private static final String KEY_PRE = "boot_engine:rate_limit_redis_key_pre:";
+    private static final String KEY_PRE = "rule-engine:rate-limit:{%s}";
 
     /**
      * 存在bug，待优化
@@ -68,28 +70,29 @@ public class RateLimitAspect {
      */
     @Around("@annotation(rateLimit)")
     public Object around(ProceedingJoinPoint joinPoint, RateLimit rateLimit) throws Throwable {
-        String key = KEY_PRE;
+        String value;
         switch (rateLimit.type()) {
             case IP:
-                key += HttpServletUtils.getRequest().getRemoteAddr();
+                value = HttpServletUtils.getRequest().getRemoteAddr();
                 break;
             case URL:
-                key += HttpServletUtils.getRequest().getRequestURI();
+                value = HttpServletUtils.getRequest().getRequestURI();
                 break;
             case USER:
                 UserData userData = Context.getCurrentUser();
                 if (userData == null) {
                     throw new RuntimeException("选择根据用户限流,但是并没有获取到用户登录信息!");
                 }
-                key += userData.getId().toString();
+                value = userData.getId().toString();
                 break;
             case URL_IP:
                 HttpServletRequest request = HttpServletUtils.getRequest();
-                key += request.getRequestURI() + request.getRemoteAddr();
+                value = request.getRequestURI() + request.getRemoteAddr();
                 break;
             default:
                 throw new UnsupportedOperationException();
         }
+        String key = String.format(KEY_PRE, value);
         log.info("执行限流拦截器,限制类型:{},key:{}", rateLimit.type(), key);
         this.executor(key, rateLimit);
         return joinPoint.proceed();
@@ -102,14 +105,14 @@ public class RateLimitAspect {
      * @param rateLimit 速率参数
      */
     private void executor(String key, RateLimit rateLimit) {
-        //限制时间间隔
+        // 限制时间间隔
         long refreshInterval = rateLimit.refreshInterval();
-        //限制时间间隔内可用次数
+        // 限制时间间隔内可用次数
         long limit = rateLimit.limit();
-        //时间单位
+        // 时间单位
         RateIntervalUnit rateIntervalUnit = rateLimit.rateIntervalUnit();
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(key);
-        //初始化RateLimiter的状态，并将配置存储到Redis服务器
+        // 初始化RateLimiter的状态，并将配置存储到Redis服务器
         if (!rateLimiter.isExists()) {
             boolean trySetRate = rateLimiter.trySetRate(RateType.OVERALL, limit, refreshInterval, rateIntervalUnit);
             log.info("初始化RateLimiter的状态:{}", trySetRate);
@@ -120,4 +123,5 @@ public class RateLimitAspect {
             throw new ValidationException("你访问过于频繁,请稍后重试!");
         }
     }
+
 }

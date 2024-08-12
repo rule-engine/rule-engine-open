@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ruleengine.web.interceptor;
+package cn.ruleengine.compute.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -36,7 +36,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
-public class MDCLogInterceptor extends HandlerInterceptorAdapter {
+public class TraceInterceptor extends HandlerInterceptorAdapter {
 
     public final static String REQUEST_ID = "requestId";
 
@@ -63,7 +63,7 @@ public class MDCLogInterceptor extends HandlerInterceptorAdapter {
      * @return request id
      */
     public static String getRequestId() {
-        return MDC.get(MDCLogInterceptor.REQUEST_ID);
+        return MDC.get(TraceInterceptor.REQUEST_ID);
     }
 
 }

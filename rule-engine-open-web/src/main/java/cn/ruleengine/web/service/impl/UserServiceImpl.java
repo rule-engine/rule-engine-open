@@ -10,15 +10,18 @@ import cn.ruleengine.web.enums.HtmlTemplatesEnum;
 import cn.ruleengine.web.enums.UserType;
 import cn.ruleengine.web.enums.VerifyCodeType;
 import cn.ruleengine.web.exception.LoginException;
-import cn.ruleengine.web.interceptor.AuthInterceptor;
+import cn.ruleengine.web.interceptor.TokenInterceptor;
 import cn.ruleengine.web.service.UserService;
 import cn.ruleengine.web.service.WorkspaceService;
 import cn.ruleengine.web.store.entity.RuleEngineUser;
 import cn.ruleengine.web.store.entity.RuleEngineUserWorkspace;
+import cn.ruleengine.web.store.entity.RuleEngineWorkspace;
 import cn.ruleengine.web.store.manager.RuleEngineUserManager;
 import cn.ruleengine.web.store.manager.RuleEngineUserWorkspaceManager;
+import cn.ruleengine.web.store.mapper.RuleEngineWorkspaceMapper;
 import cn.ruleengine.web.util.*;
 import cn.ruleengine.web.vo.user.*;
+import cn.ruleengine.web.vo.workspace.Workspace;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.redisson.api.RBucket;
@@ -26,6 +29,8 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,10 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -61,6 +63,13 @@ public class UserServiceImpl implements UserService {
      */
     private static final String FORGOT_EMAIL_CODE_PRE = "rule_engine_boot_user_forgot_email_code_pre:";
 
+    @Value("${auth.redis.token.keyPrefix:token:}")
+    public String tokenKeyPrefix;
+    @Value("${auth.redis.token.keepTime:3600000}")
+    public Long redisTokenKeepTime;
+    @Value("${auth.jwt.issuer:ruleengine}")
+    private String issuer;
+
     @Resource
     private RuleEngineUserManager ruleEngineUserManager;
     @Resource
@@ -71,13 +80,12 @@ public class UserServiceImpl implements UserService {
     private EmailClient emailClient;
     @Resource
     private AliOSSClient aliOssClient;
+    @Resource
+    private ApplicationContext applicationContext;
+    @Lazy
+    @Resource
+    private WorkspaceService workspaceService;
 
-    @Value("${auth.redis.token.keyPrefix:token:}")
-    public String tokenKeyPrefix;
-    @Value("${auth.redis.token.keepTime:3600000}")
-    public Long redisTokenKeepTime;
-    @Value("${auth.jwt.issuer:ruleengine}")
-    private String issuer;
 
     /**
      * 用户登录
@@ -85,21 +93,37 @@ public class UserServiceImpl implements UserService {
      * @param loginRequest 登录信息
      * @return true表示登录成功
      */
-    @Override
     public boolean login(LoginRequest loginRequest) {
         RuleEngineUser ruleEngineUser = ruleEngineUserManager.lambdaQuery()
                 .and(a -> a.eq(RuleEngineUser::getUsername, loginRequest.getUsername())
-                        .or().eq(RuleEngineUser::getEmail, loginRequest.getUsername())).one();
+                        .or()
+                        .eq(RuleEngineUser::getEmail, loginRequest.getUsername())
+                )
+                .eq(RuleEngineUser::getPassword, MD5Utils.encrypt(loginRequest.getPassword()))
+                .one();
         if (ruleEngineUser == null) {
-            throw new LoginException("用户名/邮箱不存在!");
+            throw new LoginException("用户名或密码错误！");
         }
-        if (!(ruleEngineUser.getPassword().equals(MD5Utils.encrypt(loginRequest.getPassword())))) {
-            throw new LoginException("登录密码错误!");
+        // 查看用户是否有默认工作空间
+        RBucket<Workspace> bucket = this.redissonClient.getBucket(WorkspaceService.CURRENT_WORKSPACE + ruleEngineUser.getId());
+        Workspace workspace = bucket.get();
+        // 登录如果没有，给设置一个默认的工作空间
+        if (workspace == null) {
+            // 设置一个默认工作空间
+            boolean isAdmin = Objects.equals(ruleEngineUser.getIsAdmin(), UserData.ADMIN);
+            workspace = this.workspaceService.getFirstWorkspace(ruleEngineUser.getId(), isAdmin);
+            if (isAdmin) {
+                workspace.setAdministration(Boolean.TRUE);
+            } else {
+                boolean workspaceAdministrator = this.workspaceService.isWorkspaceAdministrator(ruleEngineUser.getId(), workspace.getId());
+                workspace.setAdministration(workspaceAdministrator);
+            }
+            bucket.set(workspace);
         }
         String token = JWTUtils.genderToken(String.valueOf(ruleEngineUser.getId()), this.issuer, ruleEngineUser.getUsername());
         HttpServletResponse response = HttpServletUtils.getResponse();
-        response.setHeader(HttpServletUtils.ACCESS_CONTROL_EXPOSE_HEADERS, AuthInterceptor.TOKEN);
-        response.setHeader(AuthInterceptor.TOKEN, token);
+        response.setHeader(HttpServletUtils.ACCESS_CONTROL_EXPOSE_HEADERS, TokenInterceptor.TOKEN);
+        response.setHeader(TokenInterceptor.TOKEN, token);
         this.refreshUserData(token, ruleEngineUser);
         return true;
     }
@@ -282,7 +306,7 @@ public class UserServiceImpl implements UserService {
         this.ruleEngineUserManager.updateById(ruleEngineUser);
         // 如果当前登陆人是自己，更新当前登陆用户信息
         if (currentUser.getId().equals(userInfoRequest.getId())) {
-            String token = HttpServletUtils.getRequest().getHeader(AuthInterceptor.TOKEN);
+            String token = HttpServletUtils.getRequest().getHeader(TokenInterceptor.TOKEN);
             this.refreshUserData(token, ruleEngineUser);
         }
         return true;

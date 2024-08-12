@@ -17,7 +17,9 @@ package cn.ruleengine.web.config;
 
 
 import cn.ruleengine.web.interceptor.AuthInterceptor;
-import cn.ruleengine.web.interceptor.MDCLogInterceptor;
+import cn.ruleengine.web.interceptor.TraceInterceptor;
+import cn.ruleengine.web.interceptor.TokenInterceptor;
+import cn.ruleengine.web.interceptor.WorkspaceInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -39,7 +41,11 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Resource
-    private MDCLogInterceptor mdcLogInterceptor;
+    private TraceInterceptor traceInterceptor;
+    @Resource
+    private TokenInterceptor tokenInterceptor;
+    @Resource
+    private WorkspaceInterceptor workspaceInterceptor;
     @Resource
     private AuthInterceptor authInterceptor;
 
@@ -59,11 +65,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(this.mdcLogInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(this.traceInterceptor).addPathPatterns("/**")
                 .excludePathPatterns(STATIC_RESOURCE);
+        // 需保证顺序
+        registry.addInterceptor(this.tokenInterceptor).addPathPatterns("/**")
+                .excludePathPatterns(STATIC_RESOURCE).order(10);
+        registry.addInterceptor(this.workspaceInterceptor).addPathPatterns("/**")
+                .excludePathPatterns(STATIC_RESOURCE).order(11);
         registry.addInterceptor(this.authInterceptor).addPathPatterns("/**")
-                .excludePathPatterns(STATIC_RESOURCE);
-        ;
+                .excludePathPatterns(STATIC_RESOURCE).order(12);
     }
 
 }

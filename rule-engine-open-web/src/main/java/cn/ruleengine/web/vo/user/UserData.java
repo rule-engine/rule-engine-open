@@ -16,6 +16,10 @@ import java.io.Serializable;
 public class UserData implements Serializable {
 
     private static final long serialVersionUID = -5944149026431724373L;
+    /**
+     * admin = 0
+     */
+    public static final int ADMIN = 0;
 
     private Integer id;
 

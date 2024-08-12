@@ -20,6 +20,11 @@ public class ApiException extends RuntimeException {
     @Getter
     private final int code;
 
+    public ApiException(ErrorCodeEnum errorCodeEnum) {
+        super(errorCodeEnum.getMsg());
+        code = errorCodeEnum.getCode();
+    }
+
     /**
      * 例如:
      * <blockquote>

@@ -49,4 +49,22 @@
         where rew.deleted=0 order by rew.create_time limit 1
     </select>
 
+    <select id="getFirstHasPermissionWorkspace" resultType="cn.ruleengine.web.store.entity.RuleEngineWorkspace">
+        select rew.id,
+               rew.code,
+               rew.name,
+               rew.create_time       as createTime,
+               rew.description,
+               rew.access_key_id     as accessKeyId,
+               rew.access_key_secret as accessKeySecret
+        from rule_engine_user_workspace ruw
+                 left join
+             rule_engine_workspace rew on rew.id = ruw.workspace_id
+        where rew.deleted = 0
+          and ruw.deleted = 0
+          and ruw.user_id = #{userId}
+        order by rew.create_time
+            limit 1
+    </select>
+
 </mapper>

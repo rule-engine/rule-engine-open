@@ -55,4 +55,13 @@ public interface RuleEngineWorkspaceMapper extends BaseMapper<RuleEngineWorkspac
      * @return RuleEngineWorkspace
      */
     RuleEngineWorkspace getFirstWorkspace();
+
+    /**
+     * 获取用户有权限的第一条数据
+     *
+     * @param userId u
+     * @return r
+     */
+    RuleEngineWorkspace getFirstHasPermissionWorkspace(Integer userId);
+
 }

@@ -128,4 +128,14 @@ public interface WorkspaceService {
      */
     SelectWorkspaceResponse selectWorkSpaceById(IdRequest idRequest);
 
+
+    /**
+     * 获取一个有权限的工作空间
+     *
+     * @param userId  用户id
+     * @param isAdmin 是否为管理
+     * @return RuleEngineWorkspace
+     */
+    Workspace getFirstWorkspace(Integer userId, boolean isAdmin);
+
 }

@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.ruleengine.common.vo.BaseResult;
 import cn.ruleengine.compute.enums.ErrorCodeEnum;
 import cn.ruleengine.compute.exception.ApiException;
-import cn.ruleengine.compute.interceptor.MDCLogInterceptor;
+import cn.ruleengine.compute.interceptor.TraceInterceptor;
 import cn.ruleengine.core.exception.EngineException;
 import cn.ruleengine.core.exception.FunctionException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -53,7 +53,7 @@ public class ApiExceptionHandler {
         BaseResult result = BaseResult.err();
         log.error("Exception", e);
         // 抛出的未知异常 加上RequestId
-        result.setMessage(ErrorCodeEnum.RULE500.getMsg().concat(StringPool.AT).concat(MDCLogInterceptor.getRequestId()));
+        result.setMessage(ErrorCodeEnum.RULE500.getMsg().concat(StringPool.AT).concat(TraceInterceptor.getRequestId()));
         result.setCode(ErrorCodeEnum.RULE500.getCode());
         return result;
     }

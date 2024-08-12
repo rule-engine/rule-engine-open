@@ -16,7 +16,7 @@
 package cn.ruleengine.compute.config;
 
 
-import cn.ruleengine.compute.interceptor.MDCLogInterceptor;
+import cn.ruleengine.compute.interceptor.TraceInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -38,7 +38,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Resource
-    private MDCLogInterceptor mdcLogInterceptor;
+    private TraceInterceptor traceInterceptor;
 
     /**
      * 静态资源不拦截
@@ -55,7 +55,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(this.mdcLogInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(this.traceInterceptor).addPathPatterns("/**")
                 .excludePathPatterns(STATIC_RESOURCE);
         ;
     }

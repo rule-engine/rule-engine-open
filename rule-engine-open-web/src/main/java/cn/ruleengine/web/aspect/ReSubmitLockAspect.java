@@ -54,7 +54,7 @@ public class ReSubmitLockAspect {
     @Resource
     private RedissonClient redissonClient;
 
-    private static final String RESUBMIT_LOCK_KEY_PRE = "ruleengine_resubmit_lock_key_pre";
+    private static final String RESUBMIT_LOCK_KEY_PRE = "rule-engine:resubmit_lock_key_pre";
 
     @Around("@annotation(lock)")
     public Object around(ProceedingJoinPoint joinPoint, ReSubmitLock lock) throws Throwable {

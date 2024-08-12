@@ -65,7 +65,7 @@ public class DataPermissionAspect {
             return joinPoint.proceed();
         }
         // 如果是工作空间管理员
-        if (Context.currentIsWorkspaceAdministrator()) {
+        if (Context.getCurrentWorkspace().isAdministration()) {
             return joinPoint.proceed();
         }
         //获取参数对象数组
