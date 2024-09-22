@@ -12,7 +12,7 @@ import lombok.Getter;
  * @since 1.0.0
  */
 @AllArgsConstructor
-public enum HtmlTemplatesEnum {
+public enum FtlTemplatesEnum {
     /**
      * 发送验证码的html模板
      */

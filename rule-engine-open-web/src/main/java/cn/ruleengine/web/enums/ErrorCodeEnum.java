@@ -13,6 +13,7 @@ import java.util.Map;
  * @date 2021/6/17
  * @since 1.0.0
  */
+@Getter
 public enum ErrorCodeEnum {
 
     /**
@@ -51,9 +52,7 @@ public enum ErrorCodeEnum {
     RULE8920(8920, "条件配置异常"),
     RULE8930(8930, "无数据权限异常");
 
-    @Getter
     private final int code;
-    @Getter
     private final String msg;
 
     ErrorCodeEnum(int code, String msg) {
@@ -61,7 +60,7 @@ public enum ErrorCodeEnum {
         this.msg = msg;
     }
 
-    static Map<Integer, ErrorCodeEnum> map = new HashMap<>();
+    static final Map<Integer, ErrorCodeEnum> map = new HashMap<>();
 
     static {
         ErrorCodeEnum[] values = values();

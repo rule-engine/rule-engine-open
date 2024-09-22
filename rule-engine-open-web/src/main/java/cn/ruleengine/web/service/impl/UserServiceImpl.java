@@ -6,7 +6,7 @@ import cn.hutool.core.lang.Validator;
 import cn.ruleengine.common.vo.PageRequest;
 import cn.ruleengine.common.vo.PageResult;
 import cn.ruleengine.web.config.Context;
-import cn.ruleengine.web.enums.HtmlTemplatesEnum;
+import cn.ruleengine.web.enums.FtlTemplatesEnum;
 import cn.ruleengine.web.enums.UserType;
 import cn.ruleengine.web.enums.VerifyCodeType;
 import cn.ruleengine.web.exception.LoginException;
@@ -15,11 +15,10 @@ import cn.ruleengine.web.service.UserService;
 import cn.ruleengine.web.service.WorkspaceService;
 import cn.ruleengine.web.store.entity.RuleEngineUser;
 import cn.ruleengine.web.store.entity.RuleEngineUserWorkspace;
-import cn.ruleengine.web.store.entity.RuleEngineWorkspace;
 import cn.ruleengine.web.store.manager.RuleEngineUserManager;
 import cn.ruleengine.web.store.manager.RuleEngineUserWorkspaceManager;
-import cn.ruleengine.web.store.mapper.RuleEngineWorkspaceMapper;
 import cn.ruleengine.web.util.*;
+import cn.ruleengine.web.vo.template.VerifyCode;
 import cn.ruleengine.web.vo.user.*;
 import cn.ruleengine.web.vo.workspace.Workspace;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -223,15 +222,15 @@ public class UserServiceImpl implements UserService {
      * @param email 邮箱
      */
     private void verifyCodeProcess(String pre, String email) {
-        RBucket<Integer> rBucket = redissonClient.getBucket(pre + IPUtils.getRequestIp() + email);
-        //生成验证码
-        int randomCode = (int) ((Math.random() * 9 + 1) * 10000);
-        //设置有效期10分钟
-        rBucket.set(randomCode, 600, TimeUnit.SECONDS);
-        Map<Object, Object> params = new HashMap<>(1);
-        params.put("code", randomCode);
-        //发送验证码邮件
-        emailClient.sendSimpleMail(params, HtmlTemplatesEnum.EMAIL.getMsg(), HtmlTemplatesEnum.EMAIL.getValue(), email);
+        RBucket<String> rBucket = this.redissonClient.getBucket(pre + IPUtils.getRequestIp() + email);
+        // 生成验证码
+        String randomCode = String.valueOf((int) ((Math.random() * 9 + 1) * 1000));
+        // 设置有效期5分钟
+        rBucket.set(randomCode, 5, TimeUnit.MINUTES);
+        VerifyCode verifyCode = new VerifyCode();
+        verifyCode.setCode(randomCode);
+        // 发送验证码邮件
+        this.emailClient.sendSimpleMail(verifyCode, FtlTemplatesEnum.EMAIL.getMsg(), FtlTemplatesEnum.EMAIL.getValue(), email);
     }
 
     /**

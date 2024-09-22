@@ -31,6 +31,7 @@
                     <strong style="display:block;margin-bottom:15px;">
                         异常类型：<span style="color:#f60;font-size: 24px">${type}</span><br>
                         异常时间：<span style="color:#f60;font-size: 24px">${time}</span><br>
+                        请求链路：<span style="color:#f60;font-size: 24px">${requestId}</span><br>
                         异常原因：<span style="color:#f60;font-size: 24px">${message}</span><br>
                     </strong>
                 </div>

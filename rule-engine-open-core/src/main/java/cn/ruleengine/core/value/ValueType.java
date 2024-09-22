@@ -29,6 +29,7 @@ import java.util.*;
  * @date 2020/3/9
  * @since 1.0.0
  */
+@Getter
 @AllArgsConstructor
 public enum ValueType {
 
@@ -68,11 +69,8 @@ public enum ValueType {
 
     ;
 
-    @Getter
     private final String name;
-    @Getter
     private final List<Operator> symbol;
-    @Getter
     private final Class<?> classType;
 
     public static ValueType getByValue(String value) {
