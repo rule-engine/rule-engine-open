@@ -68,6 +68,8 @@ public class StringCompare implements Compare {
                 return !leftValue.equals(rightValue);
             case CONTAIN:
                 return leftValueStr.contains(rightValueStr);
+            case NOT_CONTAIN:
+                return !leftValueStr.contains(rightValueStr);
             case STARTS_WITH:
                 // 如果右值为空，则返回false
                 if (StrUtil.isEmpty(rightValueStr)) {

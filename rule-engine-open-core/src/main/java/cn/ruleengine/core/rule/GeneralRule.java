@@ -104,6 +104,7 @@ public class GeneralRule extends DataSupport implements JsonParse {
         this.setWorkspaceId(generalRule.getWorkspaceId());
         this.setWorkspaceCode(generalRule.getWorkspaceCode());
         this.setRule(generalRule.getRule());
+        this.setVersion(generalRule.getVersion());
     }
 
     public void setRule(Rule rule) {
