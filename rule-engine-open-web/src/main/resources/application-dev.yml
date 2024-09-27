@@ -62,10 +62,10 @@ spring:
       aop-patterns: cn.ruleengine.*.service.*
   #消息队列配置
   rabbitmq:
-    host:
+    host: 127.0.0.1
     port: 5672
-    username:
-    password:
+    username: guest
+    password: guest
     listener:
       simple:
         retry:
@@ -85,9 +85,9 @@ spring:
   #redis配置
   redis:
     database: 2
-    host:
-    password:
-    port: 6000
+    host: 127.0.0.1
+    password: hidata!@#
+    port: 6379
     lettuce:
       pool:
         max-active: 2000

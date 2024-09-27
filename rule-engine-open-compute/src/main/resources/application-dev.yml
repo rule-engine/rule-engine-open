@@ -62,10 +62,10 @@ spring:
       aop-patterns: cn.ruleengine.*.service.*
   #消息队列配置
   rabbitmq:
-    host:
+    host: 127.0.0.1
     port: 5672
-    username:
-    password:
+    username: guest
+    password: guest
     listener:
       simple:
         retry:
