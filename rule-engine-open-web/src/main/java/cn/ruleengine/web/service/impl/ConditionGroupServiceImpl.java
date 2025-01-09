@@ -106,12 +106,23 @@ public class ConditionGroupServiceImpl implements ConditionGroupService {
      * @param id 条件组id
      * @return true
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Boolean delete(Integer id) {
-        // 删除条件组条件
-        this.ruleEngineConditionGroupConditionManager.lambdaUpdate()
+        // 查询条件组下是否存在条件组条件关系
+        List<RuleEngineConditionGroupCondition> list = this.ruleEngineConditionGroupConditionManager.lambdaQuery()
+                .select(RuleEngineConditionGroupCondition::getConditionId)
                 .eq(RuleEngineConditionGroupCondition::getConditionGroupId, id)
-                .remove();
+                .list();
+        if (CollUtil.isNotEmpty(list)) {
+            // 删除此条件组下的关系
+            this.ruleEngineConditionGroupConditionManager.lambdaUpdate()
+                    .eq(RuleEngineConditionGroupCondition::getConditionGroupId, id)
+                    .remove();
+            // 再去根据条件查询引用的条件
+            List<Integer> collect = list.stream().map(RuleEngineConditionGroupCondition::getConditionId).collect(Collectors.toList());
+            this.ruleEngineConditionManager.removeByIds(collect);
+        }
         // 删除条件组
         return this.ruleEngineConditionGroupManager.removeById(id);
     }
