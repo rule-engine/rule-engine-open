@@ -704,6 +704,7 @@ public class GeneralRuleServiceImpl implements GeneralRuleService {
         ruleResponse.setWorkspaceId(generalRule.getWorkspaceId());
         ruleResponse.setWorkspaceCode(generalRule.getWorkspaceCode());
         ruleResponse.setDescription(generalRule.getDescription());
+        ruleResponse.setCurrentVersion(generalRule.getVersion());
         List<ConditionGroup> conditionGroups = rule.getConditionSet().getConditionGroups();
         ruleResponse.setConditionGroup(this.ruleEngineConditionGroupService.pressConditionGroupConfig(conditionGroups));
         ruleResponse.setAction(valueResolve.getConfigValue(rule.getActionValue()));
