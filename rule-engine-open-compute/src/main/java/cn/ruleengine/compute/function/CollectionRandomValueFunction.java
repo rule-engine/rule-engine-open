@@ -36,6 +36,12 @@ import java.util.concurrent.ThreadLocalRandom;
 @Function
 public class CollectionRandomValueFunction {
 
+    /**
+     * 获取集合随机值
+     *
+     * @param list 集合
+     * @return 集合中随机值
+     */
     @Executor
     public String executor(@Param(value = "list") List<String> list) {
         int index = ThreadLocalRandom.current().nextInt(list.size());

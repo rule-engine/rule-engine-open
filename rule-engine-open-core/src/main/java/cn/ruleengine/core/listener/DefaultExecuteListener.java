@@ -16,8 +16,6 @@
 package cn.ruleengine.core.listener;
 
 import cn.ruleengine.core.DataSupport;
-import cn.ruleengine.core.Input;
-import cn.ruleengine.core.Output;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -28,20 +26,5 @@ import cn.ruleengine.core.Output;
  * @since 1.0.0
  */
 public class DefaultExecuteListener<T extends DataSupport> implements ExecuteListener<T> {
-
-    @Override
-    public void before(T rule, Input input) {
-
-    }
-
-    @Override
-    public void onException(T rule, Input input, Exception exception) {
-
-    }
-
-    @Override
-    public void after(T rule, Input input, Output output) {
-
-    }
 
 }

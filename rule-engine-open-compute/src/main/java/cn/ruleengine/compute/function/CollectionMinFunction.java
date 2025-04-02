@@ -36,6 +36,12 @@ import java.util.Optional;
 @Function
 public class CollectionMinFunction {
 
+    /**
+     * 求集合中最小值
+     *
+     * @param list 集合
+     * @return 集合中最小值
+     */
     @Executor
     public BigDecimal executor(@Param(value = "list") List<BigDecimal> list) {
         Optional<BigDecimal> bigDecimal = list.stream().min(BigDecimal::compareTo);

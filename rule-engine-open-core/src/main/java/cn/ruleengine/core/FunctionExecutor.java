@@ -96,7 +96,7 @@ public class FunctionExecutor {
                     if (i == maxAttempts || maxAttempts < 0) {
                         throw e;
                     }
-                    log.warn("执行函数主方法异常，{}ms后重试调用，异常原因：{}", executorAnnotation.delay(), e);
+                    log.warn("执行函数主方法异常，{}ms后重试调用，异常原因：", executorAnnotation.delay(), e);
                     ThreadUtil.sleep(executorAnnotation.delay());
                 }
                 i++;

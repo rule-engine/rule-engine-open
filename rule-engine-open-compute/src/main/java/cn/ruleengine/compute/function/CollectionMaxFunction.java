@@ -36,6 +36,12 @@ import java.util.Optional;
 @Function
 public class CollectionMaxFunction {
 
+    /**
+     * 求集合中最大值
+     *
+     * @param list 集合
+     * @return 集合中最大值
+     */
     @Executor
     public BigDecimal executor(@Param(value = "list") List<BigDecimal> list) {
         Optional<BigDecimal> bigDecimal = list.stream().max(BigDecimal::compareTo);
