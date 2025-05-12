@@ -52,6 +52,9 @@ public class ValueResolveImpl implements ValueResolve {
         switch (variableTypeEnum) {
             case INPUT_PARAMETER:
                 RuleEngineInputParameter ruleEngineInputParameter = ruleEngineInputParameterMap.get(Integer.valueOf(value));
+                if (ruleEngineInputParameter == null) {
+                    throw new ApiException("缺失参数：" + value);
+                }
                 return new InputParameter(ruleEngineInputParameter.getId(), ruleEngineInputParameter.getCode(), valueType);
             case VARIABLE:
                 return new Variable(Integer.valueOf(value), valueType);
@@ -60,8 +63,10 @@ public class ValueResolveImpl implements ValueResolve {
             case FORMULA:
                 return new Formula(value, valueType);
             case GENERAL_RULE:
-                // data 待优化
                 RuleEngineGeneralRule ruleEngineGeneralRule = this.ruleEngineGeneralRuleManager.getById(value);
+                if (ruleEngineGeneralRule == null) {
+                    throw new ApiException("缺失普通规则：" + value);
+                }
                 return new Executor(ruleEngineGeneralRule.getWorkspaceCode(), ruleEngineGeneralRule.getId(), ruleEngineGeneralRule.getCode(), valueType);
             default:
                 throw new IllegalStateException("Unexpected value: " + variableTypeEnum);
@@ -83,6 +88,9 @@ public class ValueResolveImpl implements ValueResolve {
         switch (variableTypeEnum) {
             case INPUT_PARAMETER:
                 RuleEngineInputParameter ruleEngineInputParameter = this.ruleEngineInputParameterManager.getById(value);
+                if (ruleEngineInputParameter == null) {
+                    throw new ApiException("缺失参数：" + value);
+                }
                 return new InputParameter(ruleEngineInputParameter.getId(), ruleEngineInputParameter.getCode(), valueType);
             case VARIABLE:
                 return new Variable(Integer.valueOf(value), valueType);
@@ -92,6 +100,9 @@ public class ValueResolveImpl implements ValueResolve {
                 return new Formula(value, valueType);
             case GENERAL_RULE:
                 RuleEngineGeneralRule ruleEngineGeneralRule = this.ruleEngineGeneralRuleManager.getById(value);
+                if (ruleEngineGeneralRule == null) {
+                    throw new ApiException("缺失普通规则：" + value);
+                }
                 return new Executor(ruleEngineGeneralRule.getWorkspaceCode(), ruleEngineGeneralRule.getId(), ruleEngineGeneralRule.getCode(), valueType);
             default:
                 throw new IllegalStateException("Unexpected value: " + variableTypeEnum);
@@ -118,6 +129,9 @@ public class ValueResolveImpl implements ValueResolve {
             value.setType(VariableType.INPUT_PARAMETER.getType());
             InputParameter inputParameter = (InputParameter) cValue;
             RuleEngineInputParameter ruleEngineInputParameter = this.ruleEngineInputParameterManager.getById(inputParameter.getInputParameterId());
+            if (ruleEngineInputParameter == null) {
+                throw new ApiException("缺失参数：" + inputParameter.getInputParameterId());
+            }
             value.setValue(String.valueOf(inputParameter.getInputParameterId()));
             value.setValueName(ruleEngineInputParameter.getName());
         } else if (cValue instanceof Variable) {
@@ -125,6 +139,9 @@ public class ValueResolveImpl implements ValueResolve {
             Variable variable = (Variable) cValue;
             value.setValue(String.valueOf(variable.getVariableId()));
             RuleEngineVariable engineVariable = this.ruleEngineVariableManager.getById(variable.getVariableId());
+            if (engineVariable == null) {
+                throw new ApiException("缺失变量：" + variable.getVariableId());
+            }
             value.setVariableType(engineVariable.getType());
             value.setValueName(engineVariable.getName());
             if (engineVariable.getType().equals(VariableType.CONSTANT.getType())) {
@@ -137,6 +154,9 @@ public class ValueResolveImpl implements ValueResolve {
             value.setType(VariableType.GENERAL_RULE.getType());
             Executor executor = (Executor) cValue;
             RuleEngineGeneralRule ruleEngineGeneralRule = this.ruleEngineGeneralRuleManager.getById(executor.getId());
+            if (ruleEngineGeneralRule == null) {
+                throw new ApiException("缺失普通规则：" + executor.getId());
+            }
             value.setValueName(ruleEngineGeneralRule.getName());
         }
         return value;
@@ -162,9 +182,16 @@ public class ValueResolveImpl implements ValueResolve {
             return configValue;
         }
         if (type.equals(VariableType.INPUT_PARAMETER.getType())) {
-            configValue.setValueName(this.ruleEngineInputParameterManager.getById(value).getName());
+            RuleEngineInputParameter engineInputParameter = this.ruleEngineInputParameterManager.getById(value);
+            if (engineInputParameter == null) {
+                throw new ApiException("缺失参数：" + value);
+            }
+            configValue.setValueName(engineInputParameter.getName());
         } else if (type.equals(VariableType.VARIABLE.getType())) {
             RuleEngineVariable engineVariable = this.ruleEngineVariableManager.getById(value);
+            if (engineVariable == null) {
+                throw new ApiException("缺失变量：" + value);
+            }
             configValue.setValueName(engineVariable.getName());
             configValue.setVariableType(engineVariable.getType());
             if (engineVariable.getType().equals(VariableType.CONSTANT.getType())) {
@@ -175,6 +202,9 @@ public class ValueResolveImpl implements ValueResolve {
             }
         } else if (type.equals(VariableType.GENERAL_RULE.getType())) {
             RuleEngineGeneralRule ruleEngineGeneralRule = this.ruleEngineGeneralRuleManager.getById(value);
+            if (ruleEngineGeneralRule == null) {
+                throw new ApiException("缺失普通规则：" + value);
+            }
             configValue.setValueName(ruleEngineGeneralRule.getName());
         }
         configValue.setValue(value);
@@ -212,8 +242,10 @@ public class ValueResolveImpl implements ValueResolve {
                 variableValue = engineVariable.getValue();
             }
         } else if (type.equals(VariableType.GENERAL_RULE.getType())) {
-            // 待优化
             RuleEngineGeneralRule ruleEngineGeneralRule = this.ruleEngineGeneralRuleManager.getById(value);
+            if (ruleEngineGeneralRule == null) {
+                throw new ApiException("缺失普通规则：" + value);
+            }
             valueName = ruleEngineGeneralRule.getName();
         }
         ConfigValue configBeanValue = new ConfigValue();
