@@ -11,6 +11,7 @@ import lombok.Getter;
  * @date 2020/8/26
  * @since 1.0.0
  */
+@Getter
 @AllArgsConstructor
 public enum DataStatus {
 
@@ -23,7 +24,6 @@ public enum DataStatus {
      */
     HISTORY(3);
 
-    @Getter
     private final Integer status;
 
 }

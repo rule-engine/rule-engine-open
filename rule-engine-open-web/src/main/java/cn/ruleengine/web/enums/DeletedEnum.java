@@ -10,6 +10,7 @@ import lombok.Getter;
  * @date 2020/7/14
  * @since 1.0.0
  */
+@Getter
 public enum DeletedEnum {
 
     /**
@@ -17,7 +18,6 @@ public enum DeletedEnum {
      */
     ENABLE(0), DISABLE(1);
 
-    @Getter
     private final Integer status;
 
     DeletedEnum(Integer status) {

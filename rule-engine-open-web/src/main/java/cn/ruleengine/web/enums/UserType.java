@@ -10,6 +10,7 @@ import lombok.Getter;
  * @date 2021/6/22 6:28 下午
  * @since 1.0.0
  */
+@Getter
 @AllArgsConstructor
 public enum UserType {
     /**
@@ -25,7 +26,6 @@ public enum UserType {
      */
     GENERAL_USER(2);
 
-    @Getter
     private final Integer type;
 
 }

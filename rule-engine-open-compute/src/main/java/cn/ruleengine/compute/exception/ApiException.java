@@ -13,11 +13,11 @@ import lombok.Getter;
  * @date 2020/1/10
  * @since 1.0.0
  */
+@Getter
 public class ApiException extends RuntimeException {
 
     private static final long serialVersionUID = 6405345374923437770L;
 
-    @Getter
     private final int code;
 
     /**

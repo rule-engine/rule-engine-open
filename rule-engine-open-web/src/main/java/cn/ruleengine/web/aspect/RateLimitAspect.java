@@ -37,8 +37,7 @@ import javax.validation.ValidationException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 〈一句话功能简述〉<br>
- * 〈接口级别限流,依赖于redis〉
+ * 接口级别限流,依赖于redis
  *
  * @author 丁乾文
  * @date 2021/6/17

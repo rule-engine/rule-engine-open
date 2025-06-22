@@ -11,6 +11,7 @@ import lombok.Getter;
  * @date 2020/9/24
  * @since 1.0.0
  */
+@Getter
 @AllArgsConstructor
 public enum VerifyCodeType {
     /**
@@ -18,7 +19,6 @@ public enum VerifyCodeType {
      */
     FORGOT(0), REGISTER(1);
 
-    @Getter
     private final Integer value;
 
 }

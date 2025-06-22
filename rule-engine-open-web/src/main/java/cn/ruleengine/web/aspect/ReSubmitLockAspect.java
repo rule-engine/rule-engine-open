@@ -78,7 +78,7 @@ public class ReSubmitLockAspect {
                     .map(Object::toString).collect(Collectors.joining(StringPool.COMMA)));
         }
         String lockKey = builder.toString();
-        RLock rLock = redissonClient.getLock(lockKey);
+        RLock rLock = this.redissonClient.getLock(lockKey);
         if (!rLock.tryLock(0L, time, TimeUnit.MILLISECONDS)) {
             log.warn("{}方法锁已经存在，请勿重复操作！", method.getName());
             throw new ReSubmitException();

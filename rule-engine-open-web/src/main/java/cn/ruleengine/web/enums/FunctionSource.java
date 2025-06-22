@@ -11,6 +11,7 @@ import lombok.Getter;
  * @date 2020/9/11
  * @since 1.0.0
  */
+@Getter
 @AllArgsConstructor
 public enum FunctionSource {
     /**
@@ -18,7 +19,6 @@ public enum FunctionSource {
      */
     SYSTEM(0), JAVA_CODE(1);
 
-    @Getter
     private final Integer value;
 
 }

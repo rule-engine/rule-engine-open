@@ -16,7 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * 〈App〉
+ * 计算服务
  *
  * @author 丁乾文
  * @date 2021/6/17 8:35 下午

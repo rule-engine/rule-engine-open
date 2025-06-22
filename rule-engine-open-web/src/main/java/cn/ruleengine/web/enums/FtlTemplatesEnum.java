@@ -11,6 +11,7 @@ import lombok.Getter;
  * @date 2021/6/17
  * @since 1.0.0
  */
+@Getter
 @AllArgsConstructor
 public enum FtlTemplatesEnum {
     /**
@@ -22,8 +23,7 @@ public enum FtlTemplatesEnum {
      */
     EXCEPTION("ExceptionMessage.ftl", "异常警告");
 
-    @Getter
-    String value;
-    @Getter
-    String msg;
+    final String value;
+    final String msg;
+
 }

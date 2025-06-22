@@ -13,6 +13,7 @@ import java.util.stream.Stream;
  * @date 2021/6/24 10:58 上午
  * @since 1.0.0
  */
+@Getter
 @AllArgsConstructor
 public enum DataType {
     /**
@@ -20,7 +21,6 @@ public enum DataType {
      */
     GENERAL_RULE(0), RULE_SET(1), DECISION_TABLE(2), FUNCTION(6), INPUT_PARAMETER(7), VARIABLE(8), FORMULA(9);
 
-    @Getter
     private final Integer type;
 
 

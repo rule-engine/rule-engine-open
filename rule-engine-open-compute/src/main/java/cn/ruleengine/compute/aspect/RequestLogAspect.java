@@ -29,8 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.stream.Stream;
 
 /**
- * 〈一句话功能简述〉<br>
- * 〈请求日志〉
+ * 打印请求日志
  *
  * @author 丁乾文
  * @date 2021/6/17
