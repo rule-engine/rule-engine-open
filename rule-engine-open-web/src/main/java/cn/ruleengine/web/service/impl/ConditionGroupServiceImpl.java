@@ -58,11 +58,11 @@ public class ConditionGroupServiceImpl implements ConditionGroupService {
     @Override
     public Integer saveOrUpdateConditionGroup(SaveOrUpdateConditionGroup saveOrUpdateConditionGroup) {
         RuleEngineConditionGroup engineConditionGroup = new RuleEngineConditionGroup();
-        engineConditionGroup.setId(saveOrUpdateConditionGroup.getId());
         engineConditionGroup.setName(saveOrUpdateConditionGroup.getName());
         engineConditionGroup.setOrderNo(saveOrUpdateConditionGroup.getOrderNo());
         if (saveOrUpdateConditionGroup.getId() != null) {
             // 更新
+            engineConditionGroup.setId(saveOrUpdateConditionGroup.getId());
             this.ruleEngineConditionGroupManager.updateById(engineConditionGroup);
         } else {
             if (saveOrUpdateConditionGroup.getOrderNo() == null) {
