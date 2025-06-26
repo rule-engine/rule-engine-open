@@ -60,9 +60,17 @@ public class ConditionGroupServiceImpl implements ConditionGroupService {
         RuleEngineConditionGroup engineConditionGroup = new RuleEngineConditionGroup();
         engineConditionGroup.setId(saveOrUpdateConditionGroup.getId());
         engineConditionGroup.setName(saveOrUpdateConditionGroup.getName());
-        engineConditionGroup.setRuleId(saveOrUpdateConditionGroup.getRuleId());
         engineConditionGroup.setOrderNo(saveOrUpdateConditionGroup.getOrderNo());
-        this.ruleEngineConditionGroupManager.saveOrUpdate(engineConditionGroup);
+        if (saveOrUpdateConditionGroup.getId() != null) {
+            // 更新
+            this.ruleEngineConditionGroupManager.updateById(engineConditionGroup);
+        } else {
+            if (saveOrUpdateConditionGroup.getOrderNo() == null) {
+                throw new IllegalArgumentException("条件组的排序号不能为空");
+            }
+            engineConditionGroup.setRuleId(saveOrUpdateConditionGroup.getRuleId());
+            this.ruleEngineConditionGroupManager.save(engineConditionGroup);
+        }
         return engineConditionGroup.getId();
     }
 
