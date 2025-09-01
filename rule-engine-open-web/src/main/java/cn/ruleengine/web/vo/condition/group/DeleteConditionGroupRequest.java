@@ -2,6 +2,8 @@ package cn.ruleengine.web.vo.condition.group;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 〈DeleteConditionGroupRequest〉
  *
@@ -12,6 +14,7 @@ import lombok.Data;
 @Data
 public class DeleteConditionGroupRequest {
 
+    @NotNull
     private Integer id;
 
 }

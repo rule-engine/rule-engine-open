@@ -67,21 +67,6 @@ public class ConditionGroupController {
     }
 
     /**
-     * 根据id查询条件组
-     *
-     * @param idRequest 条件组id
-     * @return ConditionResponse
-     */
-    @PostMapping("get")
-    @ApiOperation("根据id查询条件组")
-    public BaseResult getById(@RequestBody @Valid IdRequest idRequest) {
-        PlainResult<Object> plainResult = new PlainResult<>();
-        plainResult.setData(null);
-        return plainResult;
-    }
-
-
-    /**
      * 删除条件组
      *
      * @param deleteConditionGroupRequest 条件组id

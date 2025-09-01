@@ -14,12 +14,14 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UpdateDataPermissionRequest {
 
+    @NotNull
     private Integer dataType;
 
     /**
      * 数据库id
      * 如果data_type=0 则此data_id为规则的id
      */
+    @NotNull
     private Integer dataId;
 
     /**

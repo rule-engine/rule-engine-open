@@ -31,4 +31,13 @@ public interface OperationRecordService {
      */
     PageResult<OperationRecordResponse> operationRecord(PageRequest<OperationRecordRequest> recordRequestPageRequest);
 
+
+    /**
+     * 删除操作记录
+     *
+     * @param id 操作记录id
+     * @return true：删除成功
+     */
+    Boolean delete(Integer id);
+
 }

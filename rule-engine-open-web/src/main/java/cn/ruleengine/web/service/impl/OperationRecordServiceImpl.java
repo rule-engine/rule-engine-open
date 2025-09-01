@@ -2,6 +2,7 @@ package cn.ruleengine.web.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Validator;
 import cn.ruleengine.common.vo.PageBase;
 import cn.ruleengine.common.vo.PageRequest;
 import cn.ruleengine.common.vo.PageResult;
@@ -43,6 +44,14 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     @Resource
     private UserService userService;
 
+
+    /**
+     * 保存操作记录
+     *
+     * @param description 描述
+     * @param dataId      id
+     * @param dataType    type
+     */
     @Async
     @Override
     public void save(String description, Integer dataId, Integer dataType) {
@@ -68,15 +77,19 @@ public class OperationRecordServiceImpl implements OperationRecordService {
      */
     @Override
     public PageResult<OperationRecordResponse> operationRecord(PageRequest<OperationRecordRequest> recordRequestPageRequest) {
-        Workspace currentWorkspace = Context.getCurrentWorkspace();
         PageBase page = recordRequestPageRequest.getPage();
+        Workspace currentWorkspace = Context.getCurrentWorkspace();
         List<PageRequest.OrderBy> orders = recordRequestPageRequest.getOrders();
-
+        OperationRecordRequest query = recordRequestPageRequest.getQuery();
         QueryWrapper<RuleEngineOperationRecord> queryWrapper = new QueryWrapper<>();
-        // 只查询当前工作空间的数据
-        queryWrapper.lambda().eq(RuleEngineOperationRecord::getWorkspaceCode, currentWorkspace.getCode());
+        queryWrapper.lambda()
+                // 只查询当前工作空间的数据
+                .eq(RuleEngineOperationRecord::getWorkspaceCode, currentWorkspace.getCode())
+                .eq(Validator.isNotEmpty(query.getUserId()), RuleEngineOperationRecord::getUserId, query.getUserId())
+                .eq(Validator.isNotEmpty(query.getDataId()), RuleEngineOperationRecord::getDataId, query.getDataId())
+                .eq(Validator.isNotEmpty(query.getDataType()), RuleEngineOperationRecord::getDataType, query.getDataType());
         PageUtils.defaultOrder(orders, queryWrapper, RuleEngineOperationRecord::getOperationTime);
-        Page<RuleEngineOperationRecord> recordPage = ruleEngineOperationRecordManager.page(new Page<>(page.getPageIndex(), page.getPageSize()), queryWrapper);
+        Page<RuleEngineOperationRecord> recordPage = this.ruleEngineOperationRecordManager.page(new Page<>(page.getPageIndex(), page.getPageSize()), queryWrapper);
         List<RuleEngineOperationRecord> records = recordPage.getRecords();
         if (CollUtil.isEmpty(records)) {
             return new PageResult<>();
@@ -94,5 +107,17 @@ public class OperationRecordServiceImpl implements OperationRecordService {
         result.setData(new Rows<>(collect, PageUtils.getPageResponse(recordPage)));
         return result;
     }
+
+    /**
+     * 删除操作记录
+     *
+     * @param id 操作记录id
+     * @return true：删除成功
+     */
+    @Override
+    public Boolean delete(Integer id) {
+        return this.ruleEngineOperationRecordManager.removeById(id);
+    }
+
 
 }
